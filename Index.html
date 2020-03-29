@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Can I Binge</title>
+<link href="css/canibinge_styles.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	
+<form role="search" action="" id="search-form">
+<!--	<button id="search-button">Search</button>-->
+	<div class="search-box-container">
+		<input type="search" name="query" placeholder="Type the name of the show" id="search-box" tabindex="0">
+		<ul id="search-suggestion-container">
+<!--	
+			<li class="search-suggestion" tabindex="0" data-tvid="63247">
+				<div class="search-suggestion-poster-container">
+					<img class="search-suggestion-poster" src="https://image.tmdb.org/t/p/w500/y55oBgf6bVMI7sFNXwJDrSIxPQt.jpg" alt="Poster for “Westworld”.">
+				</div>
+				<div class="search-suggestion-text-container">
+					<span class="search-suggestion-title">Westworld</span>
+					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
+				</div>
+			</li>
+			<li class="search-suggestion" tabindex="0" data-tvid="63247">
+				<div class="search-suggestion-poster-container">
+					<img class="search-suggestion-poster" src="https://image.tmdb.org/t/p/w500/y55oBgf6bVMI7sFNXwJDrSIxPQt.jpg" alt="Poster for “Westworld”.">
+				</div>
+				<div class="search-suggestion-text-container">
+					<span class="search-suggestion-title">Westworld</span>
+					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
+				</div>
+			</li>
+			<li class="search-suggestion" tabindex="0" data-tvid="63247">
+				<div class="search-suggestion-poster-container">
+					<img class="search-suggestion-poster" src="" alt="">
+				</div>
+				<div class="search-suggestion-text-container">
+					<span class="search-suggestion-title">Westworld</span>
+					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
+				</div>
+			</li>
+			<li class="search-suggestion search-error">
+        		<span class="search-error-description">No results found for 'query'.</span>
+    		</li>
+-->
+		</ul>
+	</div>
+</form>
+<div class="show-container">
+	<div class="show-poster-container">
+		<img class="show-poster" src="" alt="">
+	</div>
+	<div class="show-details-container">
+		<h2 class="show-title"></h2>
+		<span class="show-episode-count-container">Number of episodes: <span id="show-episode-count"></span></span>
+		<span class="show-total-runtime-container">Total time needed: <span id="show-total-runtime"></span></span>
+		<span class="show-binge-answer-container">Can I binge? <span id="show-binge-answer"></span></span>
+	</div>
+</div>
+	
+<template id="search-suggestion-template">
+	<li class="search-suggestion" tabindex="0" data-tvid="">
+        <div class="search-suggestion-poster-container">
+            <img class="search-suggestion-poster" src="" alt="">
+        </div>
+        <div class="search-suggestion-text-container">
+            <span class="search-suggestion-title"></span>
+            <span class="search-suggestion-overview"></span>
+        </div>
+    </li>
+</template>
+<template id="search-error-template">
+	<li class="search-suggestion search-error">
+        <span class="search-error-description">No results found for 'query'.</span>
+    </li>
+</template>
+
+<script src="https://code.jquery.com/jquery.min.js" defer></script>
+<script src="js/themoviedb.js" defer></script>
+<script src="js/canibinge_script.js" defer></script>
+
+</body>
+	
+</html>
