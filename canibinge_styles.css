@@ -1,0 +1,139 @@
+@charset "UTF-8";
+
+#search-form {
+	width: 50vw;
+	position: absolute;
+	top: 50%;
+	left: 0;
+	transform: translateY(-50%);
+}
+
+.search-box-container {
+	width: 100%;
+}
+
+#search-box {
+	width: 100%;
+}
+
+#search-suggestion-container {
+	visibility: hidden;
+	width: 100%;
+	height: 400px;
+	overflow-y: scroll;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+#search-suggestion-container.enabled {
+	visibility: visible;
+/*	border: 5px solid blue;*/
+}
+
+.search-suggestion {
+	display: flex;
+	width: 100%;
+	height: auto;
+	min-height: 150px;
+	background-color: lightgray;
+	border-bottom: 0.5px solid black;
+	cursor: pointer;
+}
+
+.search-suggestion:last-child {
+	border-bottom: unset;
+}
+
+.search-suggestion:hover {
+	background-color: lightblue;
+}
+
+.search-suggestion:focus {
+	background-color: lightblue;
+	outline: none;
+}
+
+.search-suggestion-poster-container {
+	flex-basis: 15%;
+}
+
+.search-suggestion-poster {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	background-color: #bd134f; /* in case there's no poster */
+}
+
+.search-suggestion-text-container {
+	flex-basis: 85%;
+	align-self: center;
+}
+
+.search-suggestion-title {
+	display: block;
+	padding: 20px 20px 1em;
+}
+
+.search-suggestion-overview {
+	display: block;
+	padding: 0 20px 20px;
+}
+
+.search-suggestion.search-error {
+	justify-content: center;
+	align-items: center;
+	cursor: unset;
+}
+
+.search-suggestion.search-error:hover {
+	background-color: lightgray;
+}
+
+.search-error-description {
+	
+}
+
+.show-container {
+	display: flex;
+	width: 50vw;
+	position: absolute;
+	top: 50%;
+	left: 50vw;
+	transform: translateY(-50%);
+}
+
+.show-poster-container {
+	flex-basis: 20%;
+}
+
+.show-poster {
+	display: block;
+	width: 100%;
+}
+
+.show-details-container {
+	flex-basis: 80%;
+}
+
+.show-title {
+	display: block;
+	padding: 20px;
+	margin: 0;
+}
+
+.show-episode-count-container {
+	display: block;
+	padding: 0 20px 1em;
+}
+
+.show-total-runtime-container {
+	display: block;
+	padding: 0 20px 1em;
+}
+
+.show-binge-answer-container {
+	display: block;
+	padding: 0 20px 20px;
+}
