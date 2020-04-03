@@ -63,8 +63,8 @@ html {
 	/* slight clipping by unmodifiable user agent styles */
 	/*	text-indent: 4px; */
 	border: none;
-	-webkit-border-radius: 0;
-	border-radius: 0;
+	-webkit-border-radius: 0 !important;
+	border-radius: 0 !important;
 	margin: 0;
 	padding: 7px 9px 9px; /* MUST correspond with .search-box-container::after position & width */
 	transition: width 0.3s ease;
