@@ -64,8 +64,8 @@ html {
 	/* slight clipping by unmodifiable user agent styles */
 	/*	text-indent: 4px; */
 	border: none;
-	-webkit-border-radius: 0 !important;
-	border-radius: 0 !important;
+	-webkit-border-radius: 0;
+	border-radius: 0;
 	-webkit-box-shadow: none;
 	box-shadow: none;
 	margin: 0;
@@ -193,12 +193,13 @@ html {
 }
 
 #time-unit {
+	-moz-appearance: none;
+	-webkit-appearance: none;
 	font-family: inherit;
 	font-weight: inherit;
 	font-size: inherit;
 	color: white;
 	cursor: pointer;
-	-webkit-appearance: none;
 	border: none;
 	background: none;
 	margin: 0 0 0 7px;
@@ -217,10 +218,11 @@ html {
 }
 
 .time-adjust-button {
+	-moz-appearance: none;
+	-webkit-appearance: none;
 	position: relative;
 	color: white;
 	cursor: pointer;
-	-webkit-appearance: none;
 	border: none;
 	background: none;
 	margin: 0;
