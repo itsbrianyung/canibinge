@@ -5,61 +5,36 @@
 <meta charset="UTF-8">
 <title>Can I Binge</title>
 <link href="css/canibinge_styles.css" rel="stylesheet" type="text/css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=K2D:wght@500;700&display=swap" rel="stylesheet">
+<!-- icon font -->
+<script src="https://kit.fontawesome.com/34893f6138.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-	
-<form role="search" action="" id="search-form">
-<!--	<button id="search-button">Search</button>-->
-	<div class="search-box-container">
-		<input type="search" name="query" placeholder="Type the name of the show" id="search-box" tabindex="0">
-		<ul id="search-suggestion-container">
-<!--	
-			<li class="search-suggestion" tabindex="0" data-tvid="63247">
-				<div class="search-suggestion-poster-container">
-					<img class="search-suggestion-poster" src="https://image.tmdb.org/t/p/w500/y55oBgf6bVMI7sFNXwJDrSIxPQt.jpg" alt="Poster for “Westworld”.">
-				</div>
-				<div class="search-suggestion-text-container">
-					<span class="search-suggestion-title">Westworld</span>
-					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
-				</div>
-			</li>
-			<li class="search-suggestion" tabindex="0" data-tvid="63247">
-				<div class="search-suggestion-poster-container">
-					<img class="search-suggestion-poster" src="https://image.tmdb.org/t/p/w500/y55oBgf6bVMI7sFNXwJDrSIxPQt.jpg" alt="Poster for “Westworld”.">
-				</div>
-				<div class="search-suggestion-text-container">
-					<span class="search-suggestion-title">Westworld</span>
-					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
-				</div>
-			</li>
-			<li class="search-suggestion" tabindex="0" data-tvid="63247">
-				<div class="search-suggestion-poster-container">
-					<img class="search-suggestion-poster" src="" alt="">
-				</div>
-				<div class="search-suggestion-text-container">
-					<span class="search-suggestion-title">Westworld</span>
-					<span class="search-suggestion-overview">A dark odyssey about the dawn of artificial consciousness and the evolution of sin. Set at the intersection of the near future and the reimagined past, it explores a world in which every human appetite, no matter how noble or depraved, can be indulged.</span>
-				</div>
-			</li>
-			<li class="search-suggestion search-error">
-        		<span class="search-error-description">No results found for 'query'.</span>
-    		</li>
--->
-		</ul>
+
+<div id="content">
+	<div class="question">
+		<span class="text large-text question-text">Can I binge</span>
+		<form role="search" action="" id="search-form">
+			<div class="search-box-container">
+				<input type="search" name="query" placeholder="Modern Family" spellcheck="false" autocomplete="off" id="search-box" class="text large-text" aria-label="search for TV show" tabindex="0">
+				<ul id="search-suggestion-container"></ul>
+			</div>
+		</form>
+		<span class="text large-text question-text">in</span>
+		<div class="text large-text question-text time-container">
+			<button class="mobile-time-adjust-button time-adjust-button" id="mobile-time-adjust-down" aria-label="increase time" tabindex="0"><i class="fas fa-caret-left"></i></button>
+			<span id="time-number" aria-label="time">1</span><button id="time-unit" aria-label="time unit">day</button>
+			<button class="mobile-time-adjust-button time-adjust-button" id="mobile-time-adjust-up" aria-label="increase time" tabindex="0"><i class="fas fa-caret-right"></i></button>
+			<div class="time-adjust"><button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-up" aria-label="increase time" tabindex="0"><i class="fas fa-caret-up"></i></button><button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-down" aria-label="decrease time" tabindex="0"><i class="fas fa-caret-down"></i></button></div>
+		</div>
+		<span class="text large-text question-text">?</span>
 	</div>
-</form>
-<div class="show-container">
-	<div class="show-poster-container">
-		<img class="show-poster" src="" alt="">
-	</div>
-	<div class="show-details-container">
-		<h2 class="show-title"></h2>
-		<span class="show-episode-count-container">Number of episodes: <span id="show-episode-count"></span></span>
-		<span class="show-total-runtime-container">Total time needed: <span id="show-total-runtime"></span></span>
-		<span class="show-binge-answer-container">Can I binge? <span id="show-binge-answer"></span></span>
-	</div>
-</div>
+	<span class="text large-text" class="disabled" id="bingeability"></span>
+</div>	
+<div class="background"></div>
 	
 <template id="search-suggestion-template">
 	<li class="search-suggestion" tabindex="0" data-tvid="">
@@ -67,19 +42,20 @@
             <img class="search-suggestion-poster" src="" alt="">
         </div>
         <div class="search-suggestion-text-container">
-            <span class="search-suggestion-title"></span>
-            <span class="search-suggestion-overview"></span>
+            <span class="text small-text search-suggestion-title"></span>
+            <span class="text small-text search-suggestion-date"></span>
         </div>
     </li>
 </template>
 <template id="search-error-template">
 	<li class="search-suggestion search-error">
-        <span class="search-error-description">No results found for 'query'.</span>
+        <span class="text small-text search-error-description">No results found for 'query'.</span>
     </li>
 </template>
 
-<script src="https://code.jquery.com/jquery.min.js" defer></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous" defer></script>
 <script src="js/themoviedb.js" defer></script>
+<script src="js/jquery.autosize.input.js" defer></script>
 <script src="js/canibinge_script.js" defer></script>
 
 </body>
