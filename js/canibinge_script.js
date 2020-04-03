@@ -3,19 +3,41 @@
 // JSON RETURN IF NO RESULTS FOUND:
 // Success callback: {"page":1,"total_results":0,"total_pages":0,"results":[]}
 
-var template, errorTemplate, searchBox, suggestionContainer, showContainer;
+var template, errorTemplate, searchBox, suggestionContainer;
+// search suggestions template
+template = document.querySelector('#search-suggestion-template'); // select template element
+errorTemplate = document.querySelector('#search-error-template'); // select error template element
+searchBox = document.querySelector('#search-box'); // select search box (starting point of arrow navigation)
+suggestionContainer = document.querySelector('#search-suggestion-container'); // select suggestions container
+var showLoaded = false;
+
 var timeNumber = 1; // default: 1
-var timeUnit = 1440; // default: 1440 minutes i.e. minutes in a day
-var timeUnitMultiplier = 1; // 1 = 1 day; 7 = 1 week; 30 = 1 month; 365 = 1 year
-// Multiply timeNumber * timeUnit * timeUnitMultiplier to get total time available
+var timeUnitMins = 1440; // default: 1440 minutes i.e. minutes in a day
+var timeUnitMultipliers = [1, 7, 30, 365]; // 1 = 1 day; 7 = 1 week; 30 = 1 month; 365 = 1 year
+// Multiply timeNumber * timeUnitMins * timeUnitMultipliers[timeUnitsIndex] to get total time available
+var timeUnits = ['day', 'week', 'month', 'year'];
+var timeUnitsIndex = 0; // start at 'day'
+var timeUnitIsPlural = false;
+var selected_totalRuntimeMinutes = 0;
+var selected_averageRuntime = 0;
+var selected_missingVars = false;
 
 $(document).ready(function () {
 	$('#search-form').submit(function (e) {
 		e.preventDefault(); // stops page redirect
 	});
 	
+	 // init AutosizeInput plugin
+	if (window.innerWidth >= 1000) { // desktop
+		$('#search-box').autosizeInput({'space': 0, 'desktopMinWidth': 350, 'placeholder': 'Modern Family'});
+	} else {
+		$('#search-box').autosizeInput({'space': 9, 'desktopMinWidth': window.innerWidth - 120, 'placeholder': 'Modern Family'});
+	}
+	
 	$('#search-box').focus(function () {
-		$('#search-suggestion-container').addClass('enabled');
+		$('#search-box').addClass('enabled');
+		$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
+		$('#bingeability').addClass('pending');
 	});
 	
 	$(document).click(function (e) { // close suggestions container when clicking outside search box/button
@@ -23,31 +45,80 @@ $(document).ready(function () {
 			closeSearch();
 		}
 	});
-	
-//	$('#search-button').click(function () {
-//		var query = $('#search-box').val();
-//		theMovieDb.search.getTv({"query":query}, successCB, errorCB);
-//	});
 	 
 	$('#search-box').on('input', delay(function (e) { // start new search every time text in search box changes
         var query = $('#search-box').val();
         if (query.length != 0) { // send query only if there's something in text box
             theMovieDb.search.getTv({"query":query}, successCB, errorCB);
         } else {
-            populateError(0);
+			$('#search-suggestion-container').empty(); // clear search suggestions
+//          populateError(0); // show 'start typing' prompt if input is empty
         }
-	}, 100)); // delay by 200ms to account for typing
-		
-	// search suggestions template
-    template = document.querySelector('#search-suggestion-template'); // select template element
-    errorTemplate = document.querySelector('#search-error-template'); // select error template element
-	searchBox = document.querySelector('#search-box'); // select search box (starting point of arrow navigation)
-    suggestionContainer = document.querySelector('#search-suggestion-container'); // select suggestions container
-	showContainer = document.querySelector('.show-container'); // select show container
+	}, 100)); // delay by 100ms to account for typing
 	
-//	scrollResults(); // activate search suggestion navigation using arrow keys
-//	theMovieDb.tv.getById({"id":63247}, show_successCB, show_errorCB);
+	$('#search-box').on('input', function (e) {
+		if (showLoaded == true) {
+			showLoaded = false; // reset showLoaded boolean once user begins new search
+		}
+		if (!$('#search-suggestion-container').hasClass('enabled')) {
+			$('#search-suggestion-container').addClass('enabled'); // not on input focus; should not show up on first click
+		}
+	});
+	
+	$('#time-unit').click(function () { // update text and timeUnitMultiplier by updating timeUnitsIndex
+		if (timeUnitsIndex == timeUnits.length - 1) {
+			timeUnitsIndex = 0; // loop back to beginning of array
+			updateTimeUnit();
+		} else {
+			timeUnitsIndex++;
+			updateTimeUnit();
+		}
+		populateBingeability(selected_totalRuntimeMinutes, selected_averageRuntime, selected_missingVars);
+	});
+	
+	$('#time-adjust-up, #mobile-time-adjust-up').click(function () {
+		timeNumber++;
+		document.querySelector('#time-number').textContent = timeNumber;
+		if (timeUnitIsPlural == false && timeNumber > 1) { // make timeUnit plural if more than 1
+			timeUnitIsPlural = true;
+			updateTimeUnit();
+		}
+		populateBingeability(selected_totalRuntimeMinutes, selected_averageRuntime, selected_missingVars);
+	});
+	
+	$('#time-adjust-down, #mobile-time-adjust-down').click(function () {
+		if (timeNumber > 1) { // can't go lower than 1
+			timeNumber--;
+			document.querySelector('#time-number').textContent = timeNumber;
+		}
+		if (timeUnitIsPlural == true && timeNumber == 1) { // make timeUnit singular if 1
+			timeUnitIsPlural = false;
+			updateTimeUnit();
+		}
+		populateBingeability(selected_totalRuntimeMinutes, selected_averageRuntime, selected_missingVars);
+	});
 });
+
+function updateTimeUnit() {
+	if (timeUnitIsPlural == true) {
+		document.querySelector('#time-unit').textContent = timeUnits[timeUnitsIndex] + 's';
+    } else {
+    	document.querySelector('#time-unit').textContent = timeUnits[timeUnitsIndex];
+	}
+}
+
+function closeSearch() {
+	$('#search-box, #search-suggestion-container').removeClass('enabled');
+	$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
+	$('#bingeability').removeClass('pending');
+	if (showLoaded == true) {
+		if ($('#bingeability').hasClass('disabled')) {
+			$('#bingeability').removeClass('disabled');
+		}
+	} else if (showLoaded == false) {
+		$('#bingeability').addClass('disabled');
+	}
+}
 
 function successCB(data) {
 //	console.log("Success callback: " + data);
@@ -72,12 +143,16 @@ function errorCB(data) { // LIKELY WON'T BE CALLED but as backup, only called wh
 function populateResults(queryData) {
 	if ('content' in document.createElement('template')) { // if template tag is supported
 		for (var i = 0; i < Math.min(queryData.results.length, 5); i++) { // display up to 5 results
-			console.log(queryData.results[i].name + ': ' + queryData.results[i].overview);
+//			console.log(queryData.results[i].name + ': ' + queryData.results[i].overview);
 			// ID/TITLE/OVERVIEW
 			var clone = template.content.cloneNode(true);
 			clone.querySelector('.search-suggestion').setAttribute('data-tvid', queryData.results[i].id);
-			clone.querySelector('.search-suggestion-title').textContent = queryData.results[i].name;
-			clone.querySelector('.search-suggestion-overview').textContent = queryData.results[i].overview;
+			if (queryData.results[i].name != null) {
+				clone.querySelector('.search-suggestion-title').textContent = queryData.results[i].name;
+			}
+			if (queryData.results[i].first_air_date != null) {
+				clone.querySelector('.search-suggestion-date').textContent = queryData.results[i].first_air_date.substring(0, 4); // return first 4 characters of string i.e. only the year
+			}
 			// POSTER
 			var posterURL;
 			if (queryData.results[i].poster_path != null) {
@@ -149,8 +224,8 @@ function scrollResults() { // IMPORTANT: needs to be called EVERY TIME results a
 				if (document.activeElement == searchBox) { // if focus is on search box
 					break;
 				} else {
-					loadShow(document.activeElement); // load show details
 					closeSearch();
+					loadShow(document.activeElement); // load show details
 				}
 				break;
 			default:
@@ -159,30 +234,14 @@ function scrollResults() { // IMPORTANT: needs to be called EVERY TIME results a
 	}
 }
 
-//function selectResults() {
-//	$('.search-suggestion').click(function () {
-//		if (!$(this).hasClass('search-error')) { // exclude error results
-//			console.log("clicked");
-//			console.log($(this).data('tvid')); // get tvid
-//			var showID = $(this).data('tvid');
-//			theMovieDb.tv.getById({"id":showID}, show_successCB, show_errorCB);
-//		}
-//	});
-//}
-
 function selectResults() {
 	$('.search-suggestion').click(function () {
 		loadShow(this);
 	});
 }
 
-function closeSearch() {
-	$('#search-suggestion-container').removeClass('enabled');
-}
-
 function loadShow(entry) {
 	if (!$(entry).hasClass('search-error')) { // exclude error results
-//        console.log("clicked");
 //        console.log($(entry).data('tvid')); // get tvid
         var showID = $(entry).data('tvid');
         theMovieDb.tv.getById({"id":showID}, show_successCB, show_errorCB);
@@ -193,60 +252,65 @@ function show_successCB(data) {
 //	console.log("Success callback: " + data);
 	var queryData = JSON.parse(data);
 	console.log(queryData);
+	// MISSING VARS CONDITION
+	selected_missingVars = false; // reset
 	// EPISODE COUNT
 	// get true episode count by omitting episodes in current season that haven't aired yet
 	var trueEpisodeCount;
-	if (queryData.seasons[queryData.seasons.length - 1].episode_count != null && queryData.last_episode_to_air != null && queryData.number_of_episodes != null) {
+	if (Array.isArray(queryData.seasons) && queryData.seasons.length != 0 && queryData.last_episode_to_air != null && queryData.number_of_episodes.length != 0) {
 		var episodesRemainingInCurrentSeason = queryData.seasons[queryData.seasons.length - 1].episode_count - queryData.last_episode_to_air.episode_number; // get episode count of last season in array and minus episode no. of last aired episode
 		trueEpisodeCount = queryData.number_of_episodes - episodesRemainingInCurrentSeason; // get true episode count
-	} else if (queryData.number_of_episodes != null) {
+	} else if (queryData.number_of_episodes.length != 0) {
 		trueEpisodeCount = queryData.number_of_episodes;
+		selected_missingVars = true; // SET 'MAYBE' CONDITION
 	} else {
 		trueEpisodeCount = 0;
-		// TO ADD: SET 'UNKNOWN' CONDITION
+		selected_missingVars = true; // SET 'MAYBE' CONDITION
 	}
-	showContainer.querySelector('#show-episode-count').textContent = trueEpisodeCount;
 	// RUNTIME
 	var averageRuntime, totalRuntimeMinutes;
 	if (Array.isArray(queryData.episode_run_time) && queryData.episode_run_time.length != 0) { // check if array is empty
 		averageRuntime = average(queryData.episode_run_time);
 		totalRuntimeMinutes = trueEpisodeCount * averageRuntime; // some shows have varied runtimes - use average
-		showContainer.querySelector('#show-total-runtime').textContent = timeConvert(totalRuntimeMinutes); // convert to hours and minute
 	} else {
-		showContainer.querySelector('#show-total-runtime').textContent = "Runtime not available.";
-		// TO ADD: SET 'UNKNOWN' CONDITION
+		averageRuntime = 0;
+		totalRuntimeMinutes = 0;
+		selected_missingVars = true; // SET 'MAYBE' CONDITION
 	}
 	// TITLE
-	showContainer.querySelector('.show-title').textContent = queryData.name;
-	// POSTER
-	var posterURL;
-	if (queryData.poster_path != null) {
-		posterURL = 'https://image.tmdb.org/t/p/w500' + queryData.poster_path;
-		showContainer.querySelector('.show-poster').setAttribute('src', posterURL);
-		showContainer.querySelector('.show-poster').setAttribute('alt', 'Poster for “'+queryData.name+'”.');
-	} else {
-		posterURL = '';
-		showContainer.querySelector('.show-poster').setAttribute('src', posterURL);
-		showContainer.querySelector('.show-poster').setAttribute('alt', '');
-	}
-	populateBingeability(totalRuntimeMinutes, averageRuntime);
+	document.querySelector('#search-box').value = queryData.name;
+	showLoaded = true; // MUST set to true to show #bingeability
+	closeSearch();
+	// WRAP UP
+	populateBingeability(totalRuntimeMinutes, averageRuntime, selected_missingVars);
+	// update global variables for bingeability calculation
+	selected_totalRuntimeMinutes = totalRuntimeMinutes;
+	selected_averageRuntime = averageRuntime;
 }
 
 function show_errorCB(data) {
 	console.log("Error loading show details.");
 }
 
-function populateBingeability(total, average) {
-	timeNumber = 7;
-	var timeAvailable = timeNumber * timeUnit * timeUnitMultiplier; // in minutes
-	var daysAvailable = timeNumber * timeUnitMultiplier; // in days
-	if (total > timeAvailable) {
-		showContainer.querySelector('#show-binge-answer').textContent = "Nope";
+function populateBingeability(total, average, missingVars) {
+	var timeAvailable = timeNumber * timeUnitMins * timeUnitMultipliers[timeUnitsIndex]; // in minutes
+	var daysAvailable = timeNumber * timeUnitMultipliers[timeUnitsIndex]; // in days
+//	console.log("timeAvailable: "+timeAvailable+" daysAvailable: "+daysAvailable);
+	if (missingVars == true) {
+		document.querySelector('#bingeability').textContent = "Maybe?"; // variables missing, can't complete calculation
+	} else if (total > timeAvailable) {
+		document.querySelector('#bingeability').textContent = "Nope.";
 	} else {
 		var dailyAverage = total / daysAvailable; // in minutes
-		var dailyEpisodeAverage = Math.round(dailyAverage / average); // in episodes, rounded to nearest integer
-		showContainer.querySelector('#show-binge-answer').textContent = "Yes, if you watch about " + dailyEpisodeAverage + " episodes per day.";
-//		showContainer.querySelector('#show-binge-answer').textContent = "Yes, if you watch an average of " + timeConvert(dailyAverage) + " per day.";
+		var dailyEpisodeAverage = dailyAverage / average; // in episodes, rounded to nearest integer
+		if (dailyEpisodeAverage >= 1) {
+			var dailyEpisodeAverageRounded = Math.round(dailyEpisodeAverage);
+			document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episode(s) per day.";
+		} else { // if daily average is less than 1 e.g. 0.35 episode
+			 // MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
+			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
+			document.querySelector('#bingeability').textContent = "Yes, if you watch 1 episode a day for " + numberOfDays + " days.";
+		}
 	}
 }
 
@@ -269,5 +333,4 @@ function timeConvert(n) {
 	var minutes = (hours - rhours) * 60;
 	var rminutes = Math.round(minutes);
 	return rhours + " hour(s) and " + rminutes + " minute(s)";
-//	return num + " minutes = " + rhours + " hour(s) and " + rminutes + " minute(s)";
 }
