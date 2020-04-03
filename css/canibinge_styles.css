@@ -48,8 +48,7 @@ html {
 	display: inline-block;
 	width: auto;
 	position: relative;
-	margin: 0 0.2ch;
-	font-size: 40px; /* for margin 0.2ch */
+	margin: 0 2px;
 	vertical-align: top;
 	white-space: initial; /* reset */
 }
@@ -62,8 +61,6 @@ html {
 	color: white;
 	background: none;
 	box-sizing: border-box;
-	/* slight clipping by unmodifiable user agent styles */
-	/*	text-indent: 4px; */
 	border: none;
 	-webkit-border-radius: 0;
 	border-radius: 0;
@@ -76,8 +73,6 @@ html {
 
 #search-box.enabled {
 	width: 350px;
-/*	min-width: 350px !important;*/
-/*	max-width: 350px !important;*/
 	outline: white solid 2px;
 	outline-offset: -2px;
 }
@@ -101,7 +96,6 @@ html {
 #search-suggestion-container {
 	visibility: hidden;
 	width: 100% !important;
-/*	min-width: 350px;*/
 	height: auto;
 	max-height: 35vh;
 	position: absolute; /* important - so it won't affect content centering on page*/
@@ -263,7 +257,7 @@ html {
 		position: absolute;
 		top: 35%;
 		left: 0;
-		margin: 0 60px;
+		margin: 0 30px;
 		z-index: 5;
 	}
 	
@@ -272,7 +266,11 @@ html {
 	}
 	
 	.large-text {
-		font-size: 65px;
+		font-size: 30px;
+	}
+	
+	.small-text {
+		
 	}
 	
 	.question {
@@ -281,8 +279,7 @@ html {
 	
 	#search-form {
 		display: block;
-		font-size: 65px;
-		margin: 7px 0 10px;
+		margin: 0;
 	}
 	
 	.search-box-container {
@@ -290,29 +287,30 @@ html {
 	}
 	
 	#search-box {
-		max-width: calc(100vw - 120px) !important;
+		max-width: calc(100vw - 60px) !important;
 		transform: translateX(0);
-		padding: 0 0 7px;
-		border-bottom: 5px solid white;
+		padding: 0 0 2px;
+		border-bottom: 3px solid white;
 	}
 	
 	#search-box.enabled {
-		width: calc(100vw - 120px) !important;
+		width: calc(100vw - 60px) !important;
 		transform: translateX(-9px); /* offset padding inside #search-box */
-		padding: 0 9px 7px;
+		padding: 0 9px 2px;
+		outline: white solid 1px;
+    	outline-offset: -1px;
 	}
 	
 	#search-suggestion-container {
-/*		min-width: unset;*/
-		margin: -5px 0 0 0;
+		margin: -4px 0 0 0;
 	}
 	
 	#search-suggestion-container.enabled {
-		margin: -5px 0 0 -9px;
+		margin: -4px 0 0 -9px;
 	}
 	
 	.time-container {
-		margin: 0 10px;
+		margin: 0;
 	}
 	
 	#time-unit {
@@ -330,7 +328,7 @@ html {
 	}
 	
 	#bingeability {
-		margin-top: 150px;
+		margin-top: 100px;
 		text-align: left;
 	}
 }
