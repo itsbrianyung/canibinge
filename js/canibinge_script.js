@@ -31,7 +31,7 @@ $(document).ready(function () {
 	if (window.innerWidth >= 1000) { // desktop
 		$('#search-box').autosizeInput({'space': 0, 'desktopMinWidth': 350, 'placeholder': 'Modern Family'});
 	} else {
-		$('#search-box').autosizeInput({'space': 9, 'desktopMinWidth': window.innerWidth - 120, 'placeholder': 'Modern Family'});
+		$('#search-box').autosizeInput({'space': 9, 'desktopMinWidth': window.innerWidth - 60, 'placeholder': 'Modern Family'});
 	}
 	
 	$('#search-box').focus(function () {
