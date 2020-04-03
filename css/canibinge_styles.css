@@ -54,10 +54,11 @@ html {
 }
 
 #search-box {
+	-moz-appearance: none;
+	-webkit-appearance: none; /* remove webkit default styles */
 	width: 100%;
 	font-weight: 700;
 	color: white;
-	-webkit-appearance: textfield; /* remove webkit default styles */
 	background: none;
 	box-sizing: border-box;
 	/* slight clipping by unmodifiable user agent styles */
