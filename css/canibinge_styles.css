@@ -66,6 +66,8 @@ html {
 	border: none;
 	-webkit-border-radius: 0 !important;
 	border-radius: 0 !important;
+	-webkit-box-shadow: none;
+	box-shadow: none;
 	margin: 0;
 	padding: 7px 9px 9px; /* MUST correspond with .search-box-container::after position & width */
 	transition: width 0.3s ease;
