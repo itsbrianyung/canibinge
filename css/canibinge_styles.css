@@ -1,6 +1,7 @@
 @charset "UTF-8";
 html {
 	-webkit-text-size-adjust: 100%;
+	-webkit-font-smoothing: antialiased;
 }
 
 .background {
