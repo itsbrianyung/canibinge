@@ -32,12 +32,23 @@ html {
 	font-size: 16px;
 }
 
+.xsmall-text {
+	font-size: 13px;
+}
+
 .question-text {
 	display: inline-block;
 	padding-top: 7px;
 	vertical-align: top;
 	font-weight: 700;
 	color: white;
+}
+
+.label-text {
+	position: relative;
+	text-transform: uppercase;
+	color: white;
+	font-weight: 700;
 }
 
 .question {
@@ -95,7 +106,6 @@ html {
 
 #search-suggestion-container {
 	visibility: hidden;
-	width: 100% !important;
 	height: auto;
 	max-height: 35vh;
 	position: absolute; /* important - so it won't affect content centering on page*/
@@ -139,6 +149,7 @@ html {
 
 .search-suggestion-poster-container {
 	flex-basis: 25%;
+	max-width: 100px;
 }
 
 .search-suggestion-poster {
@@ -155,6 +166,7 @@ html {
 .search-suggestion-text-container {
 	flex-basis: 75%;
 	align-self: center;
+	margin-left: auto; /* spacing auto-adjusts after poster-container hits max-width */
 }
 
 .search-suggestion-title {
@@ -176,7 +188,12 @@ html {
 }
 
 .search-suggestion.search-error:hover {
-	background-color: lightgray;
+	background-color: white;
+}
+
+.search-suggestion.search-error:focus {
+	background-color: white;
+	outline: none;
 }
 
 .search-error-description {
@@ -235,29 +252,35 @@ html {
 	font-size: 24px;
 }
 
-#bingeability {
+.answer {
 	display: block;
-	text-align: center;
 	margin-top: 15px;
-	color: white;
-	opacity: 1;
+	text-align: center;
 	transition: opacity 0.3s ease;
 }
 
-#bingeability.pending {
+.answer.pending {
 	opacity: 0.5;
 }
 
-#bingeability.disabled {
+.answer.disabled {
 	opacity: 0;
+}
+
+#bingeability {
+	display: inline-block;
+	color: white;
+	vertical-align: top;
+	opacity: 1;
 }
 
 @media (max-width:999px) {
 	#content {
+		width: calc(100vw - 60px);
 		position: absolute;
-		top: 35%;
+		top: 0;
 		left: 0;
-		margin: 0 30px;
+		margin: 200px 30px;
 		z-index: 5;
 	}
 	
@@ -271,6 +294,16 @@ html {
 	
 	.small-text {
 		
+	}
+	
+	.question-text {
+		padding: 0;
+		vertical-align: unset;
+	}
+	
+	.label-text {
+		display: block;
+		margin: 0 0 5px 2px;
 	}
 	
 	.question {
@@ -287,26 +320,31 @@ html {
 	}
 	
 	#search-box {
-		max-width: calc(100vw - 60px) !important;
+		max-width: calc(100% + 18px) !important; /* 100% of content area + input padding 9px on both sides */
 		transform: translateX(0);
-		padding: 0 0 2px;
-		border-bottom: 3px solid white;
+		margin: 1px 0 5px;
+		padding: 0 0 3px;
+		border-bottom: 2px solid white;
+		transition: width 0.3s ease;
 	}
 	
 	#search-box.enabled {
-		width: calc(100vw - 60px) !important;
+		width: calc(100% + 18px) !important;
 		transform: translateX(-9px); /* offset padding inside #search-box */
-		padding: 0 9px 2px;
+		margin: 5px 0 5px;
+		padding: 0 9px 3px;
 		outline: white solid 1px;
     	outline-offset: -1px;
 	}
 	
 	#search-suggestion-container {
-		margin: -4px 0 0 0;
+		width: calc(100% + 18px);
+		margin: -7px 0 0 0;
+		border-radius: 0 0 5px 5px;
 	}
 	
 	#search-suggestion-container.enabled {
-		margin: -4px 0 0 -9px;
+		margin: -7px 0 0 -9px;
 	}
 	
 	.time-container {
@@ -327,9 +365,30 @@ html {
 		font-size: inherit;
 	}
 	
-	#bingeability {
-		margin-top: 100px;
+	.answer {
+		margin-top: 80px;
 		text-align: left;
+	}
+	
+	#bingeability {
+		line-height: 135%;
+	}
+}
+
+@media (max-width:899px) and (orientation:landscape), (min-width:450px) and (orientation:portrait) {
+	#content {
+        width: calc(100vw - 120px);
+        margin: 100px 60px;
+	}
+	
+	/* iPhone notch compensation - MUST come after other styles */
+    /* max() ensures safe-area-inset doesn't affect portrait layout */
+    /* use calc to add margin on top of safe-area-inset */
+    @supports (margin: max(0px)) {
+		#content {
+			width: max(calc(100vw - 120px), calc(100vw - 120px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+			margin: 100px max(60px, calc(60px + env(safe-area-inset-right))) 100px max(60px, calc(60px + env(safe-area-inset-left)));
+		}
 	}
 }
 
@@ -341,6 +400,19 @@ html {
 		transform: translateX(-50%);
 		z-index: 5;
 		white-space: nowrap; /* remove line breaks in HTML code*/
+	}
+	
+	.label-text {
+		display: inline-block;
+		margin-right: 50px;
+	}
+
+	.question .label-text {
+		margin-top: 26px;
+	}
+
+	.answer .label-text {
+		margin-top: 19px;
 	}
 	
 	.search-box-container {
@@ -357,6 +429,10 @@ html {
 		border-radius: 5px;
 		background-color: white;
 		transition: 0.3s ease;
+	}
+	
+	#search-suggestion-container {
+		width: 100% !important;
 	}
 	
 	.mobile-time-adjust-button {
