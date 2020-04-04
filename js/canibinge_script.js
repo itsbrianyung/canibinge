@@ -31,13 +31,13 @@ $(document).ready(function () {
 	if (window.innerWidth >= 1000) { // desktop
 		$('#search-box').autosizeInput({'space': 0, 'desktopMinWidth': 350, 'placeholder': 'Modern Family'});
 	} else {
-		$('#search-box').autosizeInput({'space': 9, 'desktopMinWidth': window.innerWidth - 60, 'placeholder': 'Modern Family'});
+		$('#search-box').autosizeInput({'space': 3, 'desktopMinWidth': window.innerWidth - 42, 'placeholder': 'Modern Family'});
 	}
 	
 	$('#search-box').focus(function () {
 		$('#search-box').addClass('enabled');
 		$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
-		$('#bingeability').addClass('pending');
+		$('.answer').addClass('pending');
 	});
 	
 	$(document).click(function (e) { // close suggestions container when clicking outside search box/button
@@ -110,13 +110,13 @@ function updateTimeUnit() {
 function closeSearch() {
 	$('#search-box, #search-suggestion-container').removeClass('enabled');
 	$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
-	$('#bingeability').removeClass('pending');
+	$('.answer').removeClass('pending');
 	if (showLoaded == true) {
-		if ($('#bingeability').hasClass('disabled')) {
-			$('#bingeability').removeClass('disabled');
+		if ($('.answer').hasClass('disabled')) {
+			$('.answer').removeClass('disabled');
 		}
 	} else if (showLoaded == false) {
-		$('#bingeability').addClass('disabled');
+		$('.answer').addClass('disabled');
 	}
 }
 
