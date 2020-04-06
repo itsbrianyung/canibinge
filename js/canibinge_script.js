@@ -37,7 +37,7 @@ $(document).ready(function () {
 	$('#search-box').focus(function () {
 		$('#search-box').addClass('enabled');
 		$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
-		$('.answer').addClass('pending');
+		$('.answer, .art').addClass('pending');
 	});
 	
 	$(document).click(function (e) { // close suggestions container when clicking outside search box/button
@@ -110,13 +110,23 @@ function updateTimeUnit() {
 function closeSearch() {
 	$('#search-box, #search-suggestion-container').removeClass('enabled');
 	$('#search-box').trigger('change'); // AutosizeInput plugin adjusts text box size upon detecting 'change' event
-	$('.answer').removeClass('pending');
+	$('.answer, .art').removeClass('pending');
 	if (showLoaded == true) {
 		if ($('.answer').hasClass('disabled')) {
 			$('.answer').removeClass('disabled');
 		}
+		if ($('.art').hasClass('disabled')) {
+			$('.art').removeClass('disabled');
+		}
+		if (!$('.art').hasClass('animate')) {
+			$('.art').addClass('animate');
+		}
 	} else if (showLoaded == false) {
-		$('.answer').addClass('disabled');
+		$('.answer, .art').addClass('disabled');
+		$('.art').removeClass('animate');
+		if ($('.dynamic-background').hasClass('enabled')) {
+			$('.dynamic-background').removeClass('enabled'); // reset dynamic background if no poster loaded
+		}
 	}
 }
 
@@ -281,6 +291,34 @@ function show_successCB(data) {
 	document.querySelector('#search-box').value = queryData.name;
 	showLoaded = true; // MUST set to true to show #bingeability
 	closeSearch();
+	// TITLE - title art
+	var showNameChunks = queryData.name.replace(/\s+/g,'').match(/.{1,3}/g); // remove spaces + split into chunks of 3 characters
+	$('.show-title-art-container').empty(); // empty existing title
+	for (var i = 0; i < showNameChunks.length; i++) {
+		$('.show-title-art-container').append('<span class="text xlarge-text art-text">' + showNameChunks[i] + '</span>');
+	}
+	// POSTER
+	var posterURL;
+	if (queryData.poster_path != null) {
+        posterURL = 'https://image.tmdb.org/t/p/w500' + queryData.poster_path;
+        document.querySelector('.show-poster').setAttribute('src', posterURL);
+        document.querySelector('.show-poster').setAttribute('alt', 'Poster for “'+queryData.name+'”.');
+        Vibrant.from(posterURL).getPalette().then(function(palette) {
+			if ($('.dynamic-background').hasClass('enabled')) {
+				$('.dynamic-background').removeClass('enabled'); // reset
+			}
+            console.log(palette);
+            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
+			setTimeout(function () {
+				$('.dynamic-background').css('background', 'linear-gradient(135deg, rgba('+palette.Vibrant._rgb+',1) 0%, rgba('+palette.Muted._rgb+',1) 100%)');
+				$('.dynamic-background').addClass('enabled');
+			}, 500);
+        });
+	} else {
+		posterURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+		document.querySelector('.show-poster').setAttribute('src', posterURL);
+		document.querySelector('.show-poster').setAttribute('alt', '');
+	}
 	// WRAP UP
 	populateBingeability(totalRuntimeMinutes, averageRuntime, selected_missingVars);
 	// update global variables for bingeability calculation
@@ -299,13 +337,19 @@ function populateBingeability(total, average, missingVars) {
 	if (missingVars == true) {
 		document.querySelector('#bingeability').textContent = "Maybe?"; // variables missing, can't complete calculation
 	} else if (total > timeAvailable) {
-		document.querySelector('#bingeability').textContent = "Nope.";
+		var atLeastDays = Math.floor((total / 60) / 24);
+		document.querySelector('#bingeability').textContent = "Nope, you'd need to watch non-stop for at least " + atLeastDays + " days.";
 	} else {
 		var dailyAverage = total / daysAvailable; // in minutes
 		var dailyEpisodeAverage = dailyAverage / average; // in episodes, rounded to nearest integer
 		if (dailyEpisodeAverage >= 1) {
 			var dailyEpisodeAverageRounded = Math.round(dailyEpisodeAverage);
-			document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episode(s) per day.";
+			// different wording if timeNumber is 1 && unit is day
+			if (timeNumber == 1 && timeUnitsIndex == 0) {
+				document.querySelector('#bingeability').textContent = "Yes, if you watch all " + dailyEpisodeAverageRounded + " episodes in 1 day.";
+			} else {
+				document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episodes per day.";
+			}
 		} else { // if daily average is less than 1 e.g. 0.35 episode
 			 // MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
 			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
