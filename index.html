@@ -17,7 +17,7 @@
 
 <div id="content">
 	<div class="question">
-		<span class="text xsmall-text label-text">Q /</span>
+		<span class="text xsmall-text label-text">Query</span>
 		<span class="text large-text question-text">Can I binge</span>
 		<form role="search" action="" id="search-form">
 			<div class="search-box-container">
@@ -35,11 +35,23 @@
 		<span class="text large-text question-text">?</span>
 	</div>
 	<div class="answer disabled">
-		<span class="text xsmall-text label-text">A /</span>
-		<span class="text large-text" id="bingeability"></span>
+		<span class="text xsmall-text label-text">Response</span>
+		<span class="text large-text" id="bingeability">Nope.</span>
 	</div>
-</div>	
-<div class="background"></div>
+</div>
+<div class="art disabled">
+	<img class="show-poster" src="" alt="" crossorigin="anonymous">
+	<div class="show-title-art-container">
+<!--
+		<span class="text xlarge-text art-text">WHE</span>
+		<span class="text xlarge-text art-text">NTH</span>
+		<span class="text xlarge-text art-text">EYS</span>
+		<span class="text xlarge-text art-text">EEUS</span>
+-->
+	</div>
+</div>
+<div class="background dynamic-background"></div>
+<div class="background static-background"></div>
 	
 <template id="search-suggestion-template">
 	<li class="search-suggestion" tabindex="0" data-tvid="">
@@ -61,6 +73,7 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous" defer></script>
 <script src="js/themoviedb.js" defer></script>
 <script src="js/jquery.autosize.input.js" defer></script>
+<script src="js/Vibrant.js" defer></script>
 <script src="js/canibinge_script.js" defer></script>
 
 </body>
