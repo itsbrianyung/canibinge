@@ -23,6 +23,8 @@ var selected_averageRuntime = 0;
 var selected_missingVars = false;
 
 $(document).ready(function () {	
+	window.addEventListener('keydown', handleFirstTab); // add tab class to body, to activate focus states
+	
 	$('#nav-home').click(function (e) {
 		e.preventDefault(); // stop page redirect
 		if (!$(this).hasClass('active')) {
@@ -70,6 +72,15 @@ $(document).ready(function () {
 		}
 	});
 	
+	$('.explainer-button').click(function (e) {
+		e.preventDefault(); // stop page redirect
+		if (!$('.explainer-text').hasClass('enabled')) {
+			$('.explainer-text').addClass('enabled');
+		} else {
+			$('.explainer-text').removeClass('enabled');
+		}
+	});
+	
 	$('#search-form').submit(function (e) {
 		e.preventDefault(); // stop page redirect
 	});
@@ -87,8 +98,8 @@ $(document).ready(function () {
 		$('.answer, .art').addClass('pending');
 	});
 	
-	$(document).click(function (e) { // close suggestions container when clicking outside search box/button
-		if (!$('#search-box').is(e.target) && !$('.nav-link span').is(e.target)) {
+	$(document).click(function (e) { // close suggestions container when clicking outside search box/button, WHEN search box is enabled
+		if ($('#search-box').hasClass('enabled') && !$('#search-box').is(e.target)) {
 			closeSearch();
 		}
 	});
@@ -146,6 +157,20 @@ $(document).ready(function () {
 	});
 });
 
+function handleFirstTab(e) {
+	if (e.keyCode === 9) {
+	  $('body').addClass('user-is-tabbing');
+	  window.removeEventListener('keydown', handleFirstTab);
+	  window.addEventListener('mousedown', handleMouseDownOnce);
+	}
+}
+
+function handleMouseDownOnce() {
+	$('body').removeClass('user-is-tabbing');
+	window.removeEventListener('mousedown', handleMouseDownOnce);
+	window.addEventListener('keydown', handleFirstTab);
+}
+
 function updateTimeUnit() {
 	if (timeUnitIsPlural == true) {
 		document.querySelector('#time-unit').textContent = timeUnits[timeUnitsIndex] + 's';
@@ -172,6 +197,12 @@ function closeSearch() {
 		}
 	} else if (showLoaded == false) {
 		$('.answer').addClass('disabled');
+		if ($('.explainer-button').hasClass('enabled')) {
+			$('.explainer-button').removeClass('enabled'); // remove explainer button
+		}
+		if ($('.explainer-text').hasClass('enabled')) {
+			$('.explainer-text').removeClass('enabled'); // remove explainer text
+		}
 		if ($('.dynamic-background').hasClass('enabled')) {
 			$('.dynamic-background').removeClass('enabled'); // reset dynamic background if no poster loaded
 		}
@@ -387,10 +418,19 @@ function populateBingeability(total, average, missingVars) {
 	var daysAvailable = timeNumber * timeUnitMultipliers[timeUnitsIndex]; // in days
 //	console.log("timeAvailable: "+timeAvailable+" daysAvailable: "+daysAvailable);
 	if (missingVars == true) {
-		document.querySelector('#bingeability').textContent = "Maybe?"; // variables missing, can't complete calculation
+		document.querySelector('#bingeability').textContent = "Maybe? Just do it."; // variables missing, can't complete calculation
+		if (!$('.explainer-button').hasClass('enabled')) {
+			$('.explainer-button').addClass('enabled'); // enable explainer button
+		}
 	} else if (total > timeAvailable) {
 		var atLeastDays = Math.ceil((total / 60) / 24);
 		document.querySelector('#bingeability').textContent = "Nope, you'd need to watch non-stop for at least " + atLeastDays + " days.";
+		if ($('.explainer-button').hasClass('enabled')) {
+			$('.explainer-button').removeClass('enabled'); // remove explainer button
+		}
+		if ($('.explainer-text').hasClass('enabled')) {
+			$('.explainer-text').removeClass('enabled'); // remove explainer text
+		}
 	} else {
 		var dailyAverage = total / daysAvailable; // in minutes
 		var dailyEpisodeAverage = dailyAverage / average; // in episodes, rounded to nearest integer
@@ -406,6 +446,12 @@ function populateBingeability(total, average, missingVars) {
 			 // MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
 			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
 			document.querySelector('#bingeability').textContent = "Yes, if you watch 1 episode a day for " + numberOfDays + " days.";
+		}
+		if ($('.explainer-button').hasClass('enabled')) {
+			$('.explainer-button').removeClass('enabled'); // remove explainer button
+		}
+		if ($('.explainer-text').hasClass('enabled')) {
+			$('.explainer-text').removeClass('enabled'); // remove explainer text
 		}
 	}
 }
