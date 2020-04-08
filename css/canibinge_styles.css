@@ -4,6 +4,30 @@ html {
 	-webkit-font-smoothing: antialiased;
 }
 
+#content {
+	pointer-events: none;
+	opacity: 0;
+	transition: 0.3s ease;
+}
+
+#content.active {
+	pointer-events: all;
+	opacity: 1;
+	transition: 0.3s ease 0.5s;
+}
+
+#about {
+	pointer-events: none;
+	opacity: 0;
+	transition: 0.3s ease;
+}
+
+#about.active {
+	pointer-events: all;
+	opacity: 1;
+	transition: 0.3s ease 0.5s;
+}
+
 .background {
 	height: 100%;
 	width: 100%;
@@ -37,18 +61,6 @@ html {
 	font-family: 'K2D', Helvetica, sans-serif;
 }
 
-.large-text {
-	font-size: 35px;
-}
-
-.small-text {
-	font-size: 16px;
-}
-
-.xsmall-text {
-	font-size: 13px;
-}
-
 .question-text {
 	display: inline-block;
 	padding-top: 7px;
@@ -60,9 +72,18 @@ html {
 .label-text {
 	display: block;
 	position: relative;
-	text-transform: uppercase;
 	color: white;
 	font-weight: 700;
+}
+
+.about-title-text {
+	color: white;
+	font-weight: 700;
+}
+
+.about-body-text, .about-credits-text {
+	color: white;
+	font-weight: 500;
 }
 
 .text::selection, .text *::selection, .question::selection, input *::selection, button *::selection {
@@ -70,9 +91,48 @@ html {
 	color: black;
 }
 
-.art::selection, .art *::selection, input::selection {
+.art::selection, .art *::selection, input::selection, .about-portfolio-link img::selection {
 	background-color: rgba(0,0,0,0);
 	color: transparent;
+}
+
+#site-nav {
+	position: absolute;
+	z-index: 20;
+}
+
+.nav-link {
+	display: inline-block;
+	position: relative;
+	color: white;
+	font-weight: 500;
+	cursor: pointer;
+	border: none;
+	background: none;
+	outline: none;
+	padding: 0;
+}
+
+.nav-link.active {
+	font-weight: 700;
+}
+
+.nav-link span:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+	position: absolute;
+	bottom: -7px;
+	left: 0;
+	border-radius: 2px;
+	background: linear-gradient(to right, white 50%, transparent 50%);
+	background-size: 200% 100%;
+	background-position: right;
+	transition: 0.2s ease;
+}
+
+.nav-link span:hover:after, .nav-link:focus span:after {
+	background-position: left;
 }
 
 .question {
@@ -225,6 +285,7 @@ html {
 }
 
 .time-container {
+	position: relative;
 	margin: 0 35px 0 8px;
 }
 
@@ -291,6 +352,14 @@ html {
 	opacity: 0;
 }
 
+.answer.label-showing {
+	opacity: 0.1;
+}
+
+.answer.disabled.label-showing {
+	opacity: 0; /* so it doesn't show when tutorial is launched while no show is loaded */
+}
+
 .art {
 	opacity: 1;
 	transition: opacity 0.3s ease;
@@ -311,6 +380,20 @@ html {
 	opacity: 1;
 }
 
+.about-portfolio-link {
+	display: block;
+	text-decoration: none;
+}
+
+.about-portfolio-link img {
+	width: 100%;
+}
+
+.tutorial-button {
+	position: absolute;
+	z-index: 20;
+}
+
 @media (max-width:999px) {
 	#content {
 		width: calc(100vw - 60px);
@@ -321,18 +404,43 @@ html {
 		z-index: 5;
 	}
 	
+	#about {
+		width: calc(100vw - 60px);
+		position: absolute;
+		top: calc(10% + 70px);
+		left: 0;
+		margin: 0 30px;
+		transform: translate(0%);
+		z-index: 5;
+	}
+
+	#about.active {
+/*		transform: translate(0px, -50%);*/
+	}
+	
+	.art {
+		display: none;
+	}
+	
 	.text {
 		white-space: normal;
+	}
+	
+	.xlarge-text {
 	}
 	
 	.large-text {
 		font-size: 30px;
 	}
-	
+
 	.small-text {
-		
+		font-size: 16px;
 	}
-	
+
+	.xsmall-text {
+		font-size: 14px;
+	}
+
 	.question-text {
 		padding: 0;
 		vertical-align: unset;
@@ -340,6 +448,33 @@ html {
 	
 	.label-text {
 		margin: 0 0 5px 2px;
+	}
+	
+	.about-title-text {
+		margin: 0 0 30px;
+		font-size: 30px;
+	}
+	
+	.about-body-text {
+		font-size: 14px;
+	}
+	
+	.about-credits-text {
+		margin: 30px 0 0;
+		font-size: 12px;
+	}
+	
+	#site-nav {
+		top: 10%;
+		left: 30px;
+	}
+	
+	#nav-home {
+		margin: 0 25px 0 1px;
+	}
+	
+	#nav-about {
+		margin: 0;
 	}
 	
 	.question {
@@ -411,12 +546,41 @@ html {
 	#bingeability {
 		line-height: 135%;
 	}
+	
+	.about-portfolio-link {
+		width: 135px;
+		margin: 20px 0 0;
+	}
+	
+	.tutorial-button {
+		display: none;
+	}
+	
+	.tutorial-label {
+		display: none;
+	}
 }
 
 @media (max-width:899px) and (orientation:landscape), (min-width:450px) and (orientation:portrait) {
 	#content {
         width: calc(100vw - 120px);
-        margin: 100px 60px;
+		top: calc(50% - 70px);
+        margin: 0 60px;
+	}
+	
+	#about {
+		width: calc(100vw - 120px);
+		top: calc(12% + 50px);
+        margin: 0 60px;
+	}
+	
+	#site-nav {
+		top: 12%;
+		left: 60px;
+	}
+	
+	.answer {
+		margin-top: 35px;
 	}
 	
 	/* iPhone notch compensation - MUST come after other styles */
@@ -424,7 +588,16 @@ html {
     @supports (margin: max(0px)) {
 		#content {
 			width: min(calc(100vw - 120px), calc(100vw - 120px - env(safe-area-inset-left) - env(safe-area-inset-right)));
-			margin: 100px max(60px, calc(60px + env(safe-area-inset-right))) 100px max(60px, calc(60px + env(safe-area-inset-left)));
+			margin: 0 max(60px, calc(60px + env(safe-area-inset-right))) 100px max(60px, calc(60px + env(safe-area-inset-left)));
+		}
+		
+		#about {
+			width: min(calc(100vw - 120px), calc(100vw - 120px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+			margin: 0 max(60px, calc(60px + env(safe-area-inset-right))) 100px max(60px, calc(60px + env(safe-area-inset-left)));
+		}
+		
+		#site-nav {
+			left: max(60px, calc(60px + env(safe-area-inset-left)));
 		}
 	}
 }
@@ -434,13 +607,41 @@ html {
 		position: absolute;
 		top: 50%;
 		left: 100px;
-		transform: translateY(-50%);
+		transform: translate(-5px, -50%);
 		z-index: 15;
 		white-space: nowrap; /* remove line breaks in HTML code*/
 	}
 	
+	#content.active {
+		transform: translate(0px, -50%);
+	}
+	
+	#about {
+		position: absolute;
+		top: 52%;
+		left: 100px;
+		transform: translate(5px, -50%);
+		z-index: 15;
+	}
+
+	#about.active {
+		transform: translate(0px, -50%);
+	}
+	
 	.xlarge-text {
 		font-size: 160px;
+	}
+	
+	.large-text {
+		font-size: 35px;
+	}
+
+	.small-text {
+		font-size: 16px;
+	}
+
+	.xsmall-text {
+		font-size: 14px;
 	}
 	
 	.label-text {
@@ -454,7 +655,7 @@ html {
 	.answer .label-text {
 		margin-bottom: 5px;
 	}
-	
+		
 	.art-text {
 		display: block;
 		font-weight: 700;
@@ -462,6 +663,36 @@ html {
 		text-transform: uppercase;
 		color: transparent;
 		-webkit-text-stroke: 1.5px white;
+	}
+	
+	.about-title-text {
+		margin: 0 0 35px;
+		font-size: 35px;
+	}
+	
+	.about-body-text {
+		width: 50vw;
+		margin: 0 0 30px;
+		font-size: 16px;
+	}
+	
+	.about-credits-text {
+		width: 50vw;
+		margin: 60px 0 0;
+		font-size: 14px;
+	}
+	
+	#site-nav {
+		top: 10%;
+		left: 100px;
+	}
+	
+	#nav-home {
+		margin: 0 35px 0 2px;
+	}
+	
+	#nav-about {
+		margin: 0;
 	}
 	
 	.search-box-container {
@@ -537,5 +768,112 @@ html {
 		left: calc(100% - 300px);
 		transform: translateY(-50%);
 		z-index: 5;
+	}
+	
+	.about-portfolio-link {
+		width: 145px;
+		margin: 30px 0 0;
+	}
+	
+	.tutorial-button {
+		-moz-appearance: none;
+		-webkit-appearance: none;
+		bottom: 10%;
+		left: 102px;
+		color: white;
+		cursor: pointer;
+		border: 0px solid #ffe664;
+		border-radius: 15px;
+		background: none;
+		margin: 0 0 -5px -5px;
+		padding: 5px;
+		font-size: 16px;
+		line-height: 0;
+		transition: color 0.2s ease;
+	}
+	
+	.tutorial-button:hover {
+		color: #ffe664;
+	}
+	
+	.tutorial-button:focus {
+		color: #ffe664;
+		outline: none;
+		border: 1px solid #ffe664;
+		margin: 0 0 -6px -6px;
+	}
+	
+	.tutorial-button.enabled {
+		color: #ffe664;
+	}
+	
+	.tutorial-label {
+		position: absolute;
+		color: white;
+		font-weight: 500;
+		line-height: 120%;
+		padding: 12px;
+		white-space: normal;
+		border: 1px solid #ffe664;
+		border-radius: 10px;
+		pointer-events: none;
+		opacity: 0;
+		transition: 0.2s ease;
+	}
+	
+	.tutorial-label.enabled {
+		opacity: 1;
+	}
+	
+	.tutorial-label:after {
+		content: '';
+		width: 1px;
+		height: 25px;
+		position: absolute;
+		background-color: #ffe664;
+	}
+	
+	#search-box-label.tutorial-label {
+		width: 230px;
+		top: -80px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	
+	#search-box-label.tutorial-label:after {
+		top: 100%;
+		left: 50%;
+	}
+	
+	#units-label.tutorial-label {
+		width: 130px;
+		bottom: -90px;
+		left: -15px;
+		transition-delay: 0s;
+	}
+	
+	#units-label.tutorial-label.enabled {
+		transition-delay: 0.05s;
+	}
+	
+	#units-label.tutorial-label:after {
+		bottom: 100%;
+		left: 50%;
+	}
+	
+	#arrows-label.tutorial-label {
+		width: 280px;
+		top: -89px;
+		left: -40px;
+		transition-delay: 0s;
+	}
+	
+	#arrows-label.tutorial-label.enabled {
+		transition-delay: 0.1s;
+	}
+	
+	#arrows-label.tutorial-label:after {
+		top: 100%;
+		left: 53px;
 	}
 }
