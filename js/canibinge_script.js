@@ -16,22 +16,69 @@ var timeUnitMins = 1440; // default: 1440 minutes i.e. minutes in a day
 var timeUnitMultipliers = [1, 7, 30, 365]; // 1 = 1 day; 7 = 1 week; 30 = 1 month; 365 = 1 year
 // Multiply timeNumber * timeUnitMins * timeUnitMultipliers[timeUnitsIndex] to get total time available
 var timeUnits = ['day', 'week', 'month', 'year'];
-var timeUnitsIndex = 0; // start at 'day'
+var timeUnitsIndex = 1; // start at 'week'
 var timeUnitIsPlural = false;
 var selected_totalRuntimeMinutes = 0;
 var selected_averageRuntime = 0;
 var selected_missingVars = false;
 
-$(document).ready(function () {
+$(document).ready(function () {	
+	$('#nav-home').click(function (e) {
+		e.preventDefault(); // stop page redirect
+		if (!$(this).hasClass('active')) {
+			$('#nav-about, #about').removeClass('active');
+			$(this).addClass('active');
+			$('#content').addClass('active');
+			if (showLoaded == true) { // only if show/artwork are loaded
+				if ($('.art').hasClass('disabled')) {
+					$('.art').removeClass('disabled');
+				}
+				if (!$('.art').hasClass('animate')) {
+					$('.art').addClass('animate');
+				}
+			}
+		}
+	});
+	
+	$('#nav-about').click(function (e) {
+		e.preventDefault(); // stop page redirect
+		if (!$(this).hasClass('active')) {
+			$('#nav-home, #content').removeClass('active');
+			$(this).addClass('active');
+			$('#about').addClass('active');
+			if (showLoaded == true) { // only if show/artwork are loaded
+				if (!$('.art').hasClass('disabled')) {
+					$('.art').addClass('disabled');
+				}
+				if ($('.art').hasClass('animate')) {
+					$('.art').removeClass('animate');
+				}
+			}
+		}
+	});
+	
+	$('.tutorial-button').click(function (e) {
+		e.preventDefault(); // stop page redirect
+		if (!$('.tutorial-button').hasClass('enabled')) {
+			$('.tutorial-button').addClass('enabled');
+			$('.tutorial-label').addClass('enabled');
+			$('.answer').addClass('label-showing');
+		} else {
+			$('.tutorial-button').removeClass('enabled');
+			$('.tutorial-label').removeClass('enabled');
+			$('.answer').removeClass('label-showing');
+		}
+	});
+	
 	$('#search-form').submit(function (e) {
-		e.preventDefault(); // stops page redirect
+		e.preventDefault(); // stop page redirect
 	});
 	
 	 // init AutosizeInput plugin
 	if (window.innerWidth >= 1000) { // desktop
 		$('#search-box').autosizeInput({'space': 0, 'desktopMinWidth': 350, 'placeholder': 'Modern Family'});
 	} else {
-		$('#search-box').autosizeInput({'space': 3, 'desktopMinWidth': window.innerWidth - 42, 'placeholder': 'Modern Family'});
+		$('#search-box').autosizeInput({'space': 0, 'placeholder': 'Modern Family'});
 	}
 	
 	$('#search-box').focus(function () {
@@ -41,7 +88,7 @@ $(document).ready(function () {
 	});
 	
 	$(document).click(function (e) { // close suggestions container when clicking outside search box/button
-		if (!$('#search-box').is(e.target) && !$('#search-button').is(e.target)) {
+		if (!$('#search-box').is(e.target) && !$('.nav-link span').is(e.target)) {
 			closeSearch();
 		}
 	});
@@ -115,17 +162,22 @@ function closeSearch() {
 		if ($('.answer').hasClass('disabled')) {
 			$('.answer').removeClass('disabled');
 		}
-		if ($('.art').hasClass('disabled')) {
-			$('.art').removeClass('disabled');
-		}
-		if (!$('.art').hasClass('animate')) {
-			$('.art').addClass('animate');
+		if ($('#content').hasClass('active')) { // if #content screen is active
+			if ($('.art').hasClass('disabled')) {
+				$('.art').removeClass('disabled');
+			}
+			if (!$('.art').hasClass('animate')) {
+				$('.art').addClass('animate');
+			}
 		}
 	} else if (showLoaded == false) {
-		$('.answer, .art').addClass('disabled');
-		$('.art').removeClass('animate');
+		$('.answer').addClass('disabled');
 		if ($('.dynamic-background').hasClass('enabled')) {
 			$('.dynamic-background').removeClass('enabled'); // reset dynamic background if no poster loaded
+		}
+		if ($('#content').hasClass('active')) {
+			$('.art').addClass('disabled');
+			$('.art').removeClass('animate');
 		}
 	}
 }
@@ -170,7 +222,7 @@ function populateResults(queryData) {
 				clone.querySelector('.search-suggestion-poster').setAttribute('src', posterURL);
 				clone.querySelector('.search-suggestion-poster').setAttribute('alt', 'Poster for “'+queryData.results[i].name+'”.');
 			} else {
-				posterURL = '';
+				posterURL = 'images/placeholder_poster.jpg';
 				clone.querySelector('.search-suggestion-poster').setAttribute('src', posterURL);
 				clone.querySelector('.search-suggestion-poster').setAttribute('alt', '');
 			}
@@ -204,7 +256,7 @@ function scrollResults() { // IMPORTANT: needs to be called EVERY TIME results a
 	document.onkeydown = function (e) {
 		switch(e.keyCode) {
 			case 38: // if UP key is pressed
-				console.log("UP PRESSED");
+//				console.log("UP PRESSED");
 				if (document.activeElement == searchBox) { // if focus is on search box
 					break;
 				} else if (document.activeElement == first) { // if focus is on first result
@@ -219,7 +271,7 @@ function scrollResults() { // IMPORTANT: needs to be called EVERY TIME results a
 				}
 				break;
 			case 40: // if DOWN key is pressed
-				console.log("DOWN PRESSED");
+//				console.log("DOWN PRESSED");
 				if (document.activeElement == searchBox) { // if focus is on search box
 					first.focus(); // shift focus to first result
 				} else if (document.activeElement == document.activeElement.parentNode.lastElementChild) { // if last result
@@ -230,7 +282,7 @@ function scrollResults() { // IMPORTANT: needs to be called EVERY TIME results a
 				}
 				break;
 			case 13: // if ENTER key is pressed
-				console.log("ENTER PRESSED");
+//				console.log("ENTER PRESSED");
 				if (document.activeElement == searchBox) { // if focus is on search box
 					break;
 				} else {
@@ -307,8 +359,8 @@ function show_successCB(data) {
 			if ($('.dynamic-background').hasClass('enabled')) {
 				$('.dynamic-background').removeClass('enabled'); // reset
 			}
-            console.log(palette);
-            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
+//            console.log(palette);
+//            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
 			setTimeout(function () {
 				$('.dynamic-background').css('background', 'linear-gradient(135deg, rgba('+palette.Vibrant._rgb+',1) 0%, rgba('+palette.Muted._rgb+',1) 100%)');
 				$('.dynamic-background').addClass('enabled');
@@ -337,7 +389,7 @@ function populateBingeability(total, average, missingVars) {
 	if (missingVars == true) {
 		document.querySelector('#bingeability').textContent = "Maybe?"; // variables missing, can't complete calculation
 	} else if (total > timeAvailable) {
-		var atLeastDays = Math.floor((total / 60) / 24);
+		var atLeastDays = Math.ceil((total / 60) / 24);
 		document.querySelector('#bingeability').textContent = "Nope, you'd need to watch non-stop for at least " + atLeastDays + " days.";
 	} else {
 		var dailyAverage = total / daysAvailable; // in minutes
