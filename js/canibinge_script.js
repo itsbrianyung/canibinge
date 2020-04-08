@@ -418,7 +418,7 @@ function populateBingeability(total, average, missingVars) {
 	var daysAvailable = timeNumber * timeUnitMultipliers[timeUnitsIndex]; // in days
 //	console.log("timeAvailable: "+timeAvailable+" daysAvailable: "+daysAvailable);
 	if (missingVars == true) {
-		document.querySelector('#bingeability').textContent = "Maybe? Just do it."; // variables missing, can't complete calculation
+		document.querySelector('#bingeability').textContent = "Maybe? (Just do it.)"; // variables missing, can't complete calculation
 		if (!$('.explainer-button').hasClass('enabled')) {
 			$('.explainer-button').addClass('enabled'); // enable explainer button
 		}
