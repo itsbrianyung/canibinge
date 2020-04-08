@@ -2,53 +2,84 @@
 <html>
 
 <head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-74290437-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-74290437-2');
+</script>
+<!-- Meta tags -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Can I Binge</title>
+<meta name="description" content="A tool to help you figure out how long it’ll take to binge a particular TV show.">
+<meta name="author" content="Brian Yung">
+<meta name="title" content="Can I Binge?">
+<meta property="og:title" content="Can I Binge?">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/social_meta_image.jpg">
+<meta property="og:description" content="A tool to help you figure out how long it’ll take to binge a particular TV show.">
+<meta property="og:url" content="https://canibinge.com">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:creator" content="@brianNpikachu">
+<meta name="twitter:title" content="Can I Binge?">
+<meta name="twitter:description" content="A tool to help you figure out how long it’ll take to binge a particular TV show.">
+<meta name="twitter:image" content="images/social_meta_image.jpg">
+<title>Can I Binge?</title>
+<!-- Styles -->
 <link href="css/canibinge_styles.css" rel="stylesheet" type="text/css">
-
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=K2D:wght@500;700&display=swap" rel="stylesheet">
-<!-- icon font -->
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=K2D:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
 <script src="https://kit.fontawesome.com/34893f6138.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-
-<div id="content">
+<nav id="site-nav">
+	<button class="text small-text nav-link active" id="nav-home" tabindex="0"><span>Can I Binge?</span></button>
+	<button class="text small-text nav-link" id="nav-about" tabindex="0"><span>About</span></button>
+</nav>
+<button class="tutorial-button" aria-label="show labels" tabindex="0"><i class="fas fa-question-circle"></i></button>
+<div class="" id="about">
+	<h2 class="text about-title-text">About</h2>
+	<p class="text about-body-text">Stuck at home with nothing to do besides watching TV?<br><i>Can I Binge?</i> helps you figure out how long it’ll take to binge a TV show. Maybe it’s that one show you’ve been meaning to watch, or the show that your Twitter mutuals have been raving about, or the show from your childhood that just started streaming. As we all take this moment in time to stay at home so that the world’s essential workers can do their jobs safely, no one’s going to judge you for watching a little more TV than usual. Literally no one’s gonna judge you. So go ahead — <i>binge</i>.</p>
+	<p class="text about-body-text">Built in quarantine by a designer who’s trying to keep himself busy or else he’s going to start talking to his furniture.</p>
+	<p class="text about-credits-text">Copyright © 2020 Brian Yung, except TV show data and artwork.<br>TV show data provided by The Movie Database (TMDb).</p>
+	<a href="https://www.brianyung.com/" target="_blank" class="about-portfolio-link"><img src="images/by_logo.png" alt="Logo of 'A project by Brian Yung'"></a>
+</div>
+<div class="active" id="content">
 	<div class="question">
 		<span class="text xsmall-text label-text">Query</span>
 		<span class="text large-text question-text">Can I binge</span>
 		<form role="search" action="" id="search-form">
 			<div class="search-box-container">
+				<label class="text xsmall-text tutorial-label" id="search-box-label">To search for a TV show, click right above the line and start typing.</label>
 				<input type="search" name="query" placeholder="Modern Family" spellcheck="false" autocomplete="off" id="search-box" class="text large-text" aria-label="search for TV show" tabindex="0">
 				<ul id="search-suggestion-container"></ul>
 			</div>
 		</form>
 		<span class="text large-text question-text">in</span>
 		<div class="text large-text question-text time-container">
+			<label class="text xsmall-text tutorial-label" id="units-label">Click on the unit of time to change it.</label>
 			<button class="mobile-time-adjust-button time-adjust-button" id="mobile-time-adjust-down" aria-label="increase time" tabindex="0"><i class="fas fa-caret-left"></i></button>
-			<span id="time-number" aria-label="time">1</span><button id="time-unit" aria-label="time unit">day</button>
+			<span id="time-number" aria-label="time">1</span><button id="time-unit" aria-label="time unit">week</button>
 			<button class="mobile-time-adjust-button time-adjust-button" id="mobile-time-adjust-up" aria-label="increase time" tabindex="0"><i class="fas fa-caret-right"></i></button>
-			<div class="time-adjust"><button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-up" aria-label="increase time" tabindex="0"><i class="fas fa-caret-up"></i></button><button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-down" aria-label="decrease time" tabindex="0"><i class="fas fa-caret-down"></i></button></div>
+			<div class="time-adjust">
+				<label class="text xsmall-text tutorial-label" id="arrows-label">Click on the arrows to increase/decrease amount of time you want to spend binging.</label>
+				<button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-up" aria-label="increase time" tabindex="0"><i class="fas fa-caret-up"></i></button><button class="desktop-time-adjust-button time-adjust-button" id="time-adjust-down" aria-label="decrease time" tabindex="0"><i class="fas fa-caret-down"></i></button>
+			</div>
 		</div>
 		<span class="text large-text question-text">?</span>
 	</div>
 	<div class="answer disabled">
-		<span class="text xsmall-text label-text">Response</span>
+		<span class="text xsmall-text label-text">Answer</span>
 		<span class="text large-text" id="bingeability">Nope.</span>
 	</div>
 </div>
 <div class="art disabled">
 	<img class="show-poster" src="" alt="" crossorigin="anonymous">
-	<div class="show-title-art-container">
-<!--
-		<span class="text xlarge-text art-text">WHE</span>
-		<span class="text xlarge-text art-text">NTH</span>
-		<span class="text xlarge-text art-text">EYS</span>
-		<span class="text xlarge-text art-text">EEUS</span>
--->
-	</div>
+	<div class="show-title-art-container"></div>
 </div>
 <div class="background dynamic-background"></div>
 <div class="background static-background"></div>
@@ -60,7 +91,7 @@
         </div>
         <div class="search-suggestion-text-container">
             <span class="text small-text search-suggestion-title"></span>
-            <span class="text small-text search-suggestion-date"></span>
+            <span class="text xsmall-text search-suggestion-date"></span>
         </div>
     </li>
 </template>
