@@ -50,7 +50,7 @@ body:not(.user-is-tabbing) button:focus {
 .dynamic-background {
 	opacity: 0.01;
 	z-index: 1;
-	transition: 0.3s ease;
+	transition: opacity 0.3s ease;
 }
 
 .dynamic-background.enabled {
