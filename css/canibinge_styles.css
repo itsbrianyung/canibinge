@@ -11,25 +11,21 @@ body:not(.user-is-tabbing) button:focus {
 #content {
 	pointer-events: none;
 	opacity: 0;
-	transition: 0.3s ease;
 }
 
 #content.active {
 	pointer-events: all;
 	opacity: 1;
-	transition: 0.3s ease 0.5s;
 }
 
 #about {
 	pointer-events: none;
 	opacity: 0;
-	transition: 0.3s ease;
 }
 
 #about.active {
 	pointer-events: all;
 	opacity: 1;
-	transition: 0.3s ease 0.5s;
 }
 
 .background {
@@ -456,6 +452,11 @@ body.user-is-tabbing .explainer-button:focus {
 		left: 0;
 		margin: 0 30px;
 		z-index: 5;
+		transition: opacity 0.3s ease;
+	}
+	
+	#content.active {
+		transition: opacity 0.3s ease 0.5s;
 	}
 	
 	#about {
@@ -466,6 +467,11 @@ body.user-is-tabbing .explainer-button:focus {
 		margin: 0 30px;
 		transform: translate(0%);
 		z-index: 5;
+		transition: opacity 0.3s ease;
+	}
+	
+	#about.active {
+		transition: opacity 0.3s ease 0.5s;
 	}
 
 	#about.active {
@@ -681,10 +687,12 @@ body.user-is-tabbing .explainer-button:focus {
 		transform: translate(-5px, -50%);
 		z-index: 15;
 		white-space: nowrap; /* remove line breaks in HTML code*/
+		transition: opacity 0.3s ease, transform 0.3s ease;
 	}
 	
 	#content.active {
 		transform: translate(0px, -50%);
+		transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
 	}
 	
 	#about {
@@ -693,10 +701,12 @@ body.user-is-tabbing .explainer-button:focus {
 		left: 100px;
 		transform: translate(5px, -50%);
 		z-index: 15;
+		transition: opacity 0.3s ease, transform 0.3s ease;
 	}
 
 	#about.active {
 		transform: translate(0px, -50%);
+		transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
 	}
 	
 	.xlarge-text {
