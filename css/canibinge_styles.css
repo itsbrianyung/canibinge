@@ -477,7 +477,7 @@ body.user-is-tabbing .explainer-button:focus {
 	font-weight: 700;
 }
 
-.about-body-text, .about-credits-text {
+.about-body-text, .about-credits-text, .webby-announcement-text {
 	color: white;
 	font-weight: 500;
 }
@@ -489,6 +489,19 @@ body.user-is-tabbing .explainer-button:focus {
 
 .about-portfolio-link img {
 	width: 100%;
+}
+
+.webby-announcement {
+	position: absolute;
+	z-index: 20;
+}
+
+.webby-announcement-logo img {
+    width: 100%;
+}
+
+.webby-announcement-text a {
+	color: white;
 }
 
 .tutorial-button {
@@ -671,7 +684,7 @@ body.user-is-tabbing .explainer-button:focus {
 		font-size: 30px;
 	}
 	
-	.about-body-text {
+	.about-body-text, .webby-announcement-text {
 		font-size: 14px;
 	}
 	
@@ -683,6 +696,19 @@ body.user-is-tabbing .explainer-button:focus {
 	.about-portfolio-link {
 		width: 135px;
 		margin: 20px 0 100px; /* margin-bottom 100px here b/c it won't work on #about for some reason */
+	}
+	
+	.webby-announcement {
+		display: none; /*!!!!!*/
+		left: 0;
+		bottom: 10%;
+    	width: calc(100vw - 60px);
+    	margin: 0 30px;
+	}
+	
+	.webby-announcement-logo {
+		width: 30%;
+		margin: 0;
 	}
 	
 	.tutorial-button {
@@ -753,7 +779,7 @@ body.user-is-tabbing .explainer-button:focus {
 	
 	#about {
 		position: absolute;
-		top: 52%;
+		top: 45%;
 		left: 100px;
 		transform: translate(5px, -50%);
 		z-index: 15;
@@ -962,10 +988,42 @@ body.user-is-tabbing .explainer-button:focus {
 		margin: 30px 0 0;
 	}
 	
+	.webby-announcement {
+		display: flex;
+		align-items: center;
+		width: 50vw;
+		max-width: 800px;
+		bottom: 10%;
+		left: 100px;
+	}
+	
+	.webby-announcement-text {
+		flex-basis: 85%;
+		margin: 0;
+		font-size: 14px;
+	}
+	
+	.webby-announcement-text a {
+		transition: color 0.2s ease;
+	}
+	
+	.webby-announcement-text a:hover {
+		color: #ffe664;
+	}
+	
+	body.user-is-tabbing .webby-announcement-text a:focus {
+		color: #ffe664;
+	}
+	
+	.webby-announcement-logo {
+		flex-basis: 15%;
+		margin: 0 25px 0 0;
+	}
+	
 	.tutorial-button {
 		-moz-appearance: none;
 		-webkit-appearance: none;
-		bottom: 10%;
+		bottom: calc(10% + 100px);
 		left: 102px;
 		color: white;
 		cursor: pointer;
