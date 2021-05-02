@@ -28,6 +28,14 @@ body:not(.user-is-tabbing) button:focus {
 	opacity: 1;
 }
 
+#vote {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 20;
+}
+
 .background {
 	height: 100%;
 	width: 100%;
@@ -509,6 +517,79 @@ body.user-is-tabbing .explainer-button:focus {
 	z-index: 20;
 }
 
+.vote-title {
+	position: relative;
+	margin: 0 auto 40px;
+	font-size: 20px;
+	color: white;
+	text-align: center;
+}
+
+.vote-title a {
+	color: inherit;
+	text-decoration: inherit;
+}
+
+.vote-logos {
+	display: flex;
+	position: relative;
+	margin: 0 auto 30px;
+	align-items: center;
+}
+
+.vote-webby-logo {
+	flex-basis: 50%;
+	margin: 0 25px 0 0;
+}
+
+.vote-nominee-logo {
+	flex-basis: 50%;
+	margin: 0 0 0 25px;
+}
+
+.vote-webby-logo img {
+	width: 100%;
+}
+
+.vote-nominee-logo img {
+	width: 90%;
+}
+
+.vote-intro-text {
+	position: relative;
+	font-size: 16px;
+	color: white;
+}
+
+.vote-intro-text:last-of-type {
+	margin-bottom: 40px;
+}
+
+.vote-category-block {
+	display: flex;
+	position: relative;
+	margin: 20px auto;
+	align-items: center;
+}
+
+.vote-category-label {
+	color: white;
+	font-weight: 700;
+	cursor: text;
+}
+
+.vote-button {
+	color: white;
+	font-weight: 700;
+	text-decoration: none;
+	padding: 15px;
+	border: 2px solid white;
+}
+
+.vote-button i {
+	margin-left: 10px;
+}
+
 @media (max-width:999px) {
 	body {
 		overflow-y: scroll;
@@ -545,6 +626,10 @@ body.user-is-tabbing .explainer-button:focus {
 
 	#about.active {
 /*		transform: translate(0px, -50%);*/
+	}
+	
+	#vote {
+		width: calc(100vw - 60px);
 	}
 	
 	.art {
@@ -718,6 +803,32 @@ body.user-is-tabbing .explainer-button:focus {
 	.tutorial-label {
 		display: none;
 	}
+	
+	.vote-logos {
+		width: 75%;
+	}
+	
+	.vote-webby-logo {
+		margin: 0 15px 0 0;
+	}
+	
+	.vote-nominee-logo {
+		margin: 0 0 0 15px;
+	}
+	
+	.vote-category-block {
+		width: 90%;
+		text-align: left;
+	}
+	
+	.vote-category-label {
+		flex-basis: 40%;
+		margin-right: 15px;
+	}
+	
+	.vote-button {
+		flex-basis: 60%;
+	}
 }
 
 @media (max-width:899px) and (orientation:landscape), (min-width:450px) and (orientation:portrait) {
@@ -789,6 +900,11 @@ body.user-is-tabbing .explainer-button:focus {
 	#about.active {
 		transform: translate(0px, -50%);
 		transition: opacity 0.3s ease 0.5s, transform 0.3s ease 0.5s;
+	}
+	
+	#vote {
+		width: 40vw;
+		max-width: 600px;
 	}
 	
 	.xlarge-text {
@@ -1120,5 +1236,29 @@ body.user-is-tabbing .explainer-button:focus {
 	#arrows-label.tutorial-label:after {
 		top: 100%;
 		left: 53px;
+	}
+	
+	.vote-logos {
+		width: 60%;
+	}
+	
+	.vote-category-block {
+		width: 80%;
+		text-align: center;
+	}
+	
+	.vote-category-label {
+		flex-basis: 50%;
+		margin-right: 30px;
+	}
+	
+	.vote-button {
+		flex-basis: 50%;
+		transition: 0.2s ease;
+	}
+	
+	.vote-button:hover {
+		background: white;
+		color: black;
 	}
 }
