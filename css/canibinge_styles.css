@@ -582,7 +582,6 @@ body.user-is-tabbing .explainer-button:focus {
 	color: white;
 	font-weight: 700;
 	text-decoration: none;
-	padding: 15px;
 	border: 2px solid white;
 }
 
@@ -817,7 +816,7 @@ body.user-is-tabbing .explainer-button:focus {
 	}
 	
 	.vote-category-block {
-		width: 90%;
+		width: 100%;
 		text-align: left;
 	}
 	
@@ -828,6 +827,7 @@ body.user-is-tabbing .explainer-button:focus {
 	
 	.vote-button {
 		flex-basis: 60%;
+		padding: 12px;
 	}
 }
 
@@ -1254,6 +1254,7 @@ body.user-is-tabbing .explainer-button:focus {
 	
 	.vote-button {
 		flex-basis: 50%;
+		padding: 15px;
 		transition: 0.2s ease;
 	}
 	
