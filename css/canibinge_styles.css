@@ -504,7 +504,7 @@ body.user-is-tabbing .explainer-button:focus {
 	z-index: 20;
 }
 
-.webby-announcement-logo img {
+.webby-announcement-logo img, .webby-announcement-nominee-logo img {
     width: 100%;
 }
 
@@ -783,16 +783,27 @@ body.user-is-tabbing .explainer-button:focus {
 	}
 	
 	.webby-announcement {
-		display: none; /*!!!!!*/
+		display: none;
 		left: 0;
 		bottom: 10%;
     	width: calc(100vw - 60px);
     	margin: 0 30px;
+		align-items: center;
 	}
 	
 	.webby-announcement-logo {
-		width: 30%;
+		flex-basis: 25%;
+		margin: 0 20px 0 0;
+	}
+	
+	.webby-announcement-nominee-logo {
+		flex-basis: 23%;
 		margin: 0;
+	}
+	
+	.webby-announcement-text {
+		display: none;
+		flex-basis: 0%;
 	}
 	
 	.tutorial-button {
@@ -1107,7 +1118,7 @@ body.user-is-tabbing .explainer-button:focus {
 	.webby-announcement {
 		display: flex;
 		align-items: center;
-		width: 50vw;
+		width: 60vw;
 		max-width: 800px;
 		bottom: 10%;
 		left: 100px;
@@ -1133,6 +1144,11 @@ body.user-is-tabbing .explainer-button:focus {
 	
 	.webby-announcement-logo {
 		flex-basis: 15%;
+		margin: 0 25px 0 0;
+	}
+	
+	.webby-announcement-nominee-logo {
+		flex-basis: 12%;
 		margin: 0 25px 0 0;
 	}
 	
