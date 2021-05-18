@@ -504,7 +504,7 @@ body.user-is-tabbing .explainer-button:focus {
 	z-index: 20;
 }
 
-.webby-announcement-logo img, .webby-announcement-nominee-logo img {
+.webby-announcement-logo img, .webby-announcement-nominee-logo img, .webby-announcement-winner-logo img {
     width: 100%;
 }
 
@@ -796,7 +796,7 @@ body.user-is-tabbing .explainer-button:focus {
 		margin: 0 20px 0 0;
 	}
 	
-	.webby-announcement-nominee-logo {
+	.webby-announcement-nominee-logo, .webby-announcement-winner-logo {
 		flex-basis: 23%;
 		margin: 0;
 	}
@@ -1147,7 +1147,7 @@ body.user-is-tabbing .explainer-button:focus {
 		margin: 0 25px 0 0;
 	}
 	
-	.webby-announcement-nominee-logo {
+	.webby-announcement-nominee-logo, .webby-announcement-winner-logo {
 		flex-basis: 12%;
 		margin: 0 25px 0 0;
 	}
