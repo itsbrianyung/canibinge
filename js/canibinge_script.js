@@ -34,6 +34,9 @@ $(document).ready(function () {
 			$('#nav-about, #about').removeClass('active');
 			$(this).addClass('active');
 			$('#content').addClass('active');
+			if ($('.tutorial-button').hasClass('hidden')) {
+                $('.tutorial-button').removeClass('hidden');
+            }
 			if (showLoaded == true) { // only if show/artwork are loaded
 				if ($('.art').hasClass('disabled')) {
 					$('.art').removeClass('disabled');
@@ -51,6 +54,9 @@ $(document).ready(function () {
 			$('#nav-home, #content').removeClass('active');
 			$(this).addClass('active');
 			$('#about').addClass('active');
+			if (!$('.tutorial-button').hasClass('hidden')) {
+                $('.tutorial-button').addClass('hidden');
+            }
 			if (showLoaded == true) { // only if show/artwork are loaded
 				if (!$('.art').hasClass('disabled')) {
 					$('.art').addClass('disabled');
