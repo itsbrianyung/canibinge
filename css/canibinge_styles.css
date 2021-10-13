@@ -491,12 +491,19 @@ body.user-is-tabbing .explainer-button:focus {
 }
 
 .about-portfolio-link {
-	display: block;
+	display: inline-block;
 	text-decoration: none;
 }
 
 .about-portfolio-link img {
 	width: 100%;
+}
+
+.about-social-icon {
+	display: inline-block;
+	margin-left: 30px;
+	font-size: 30px;
+	color: white !important;
 }
 
 .webby-announcement {
@@ -779,7 +786,7 @@ body.user-is-tabbing .explainer-button:focus {
 	
 	.about-portfolio-link {
 		width: 135px;
-		margin: 20px 0 100px; /* margin-bottom 100px here b/c it won't work on #about for some reason */
+		margin: 30px 0 100px; /* margin-bottom 100px here b/c it won't work on #about for some reason */
 	}
 	
 	.webby-announcement {
@@ -1107,7 +1114,7 @@ body.user-is-tabbing .explainer-button:focus {
 	.about-credits-text {
 		width: 50vw;
 		margin: 60px 0 0;
-		font-size: 14px;
+		font-size: 12px;
 	}
 	
 	.about-portfolio-link {
@@ -1166,11 +1173,16 @@ body.user-is-tabbing .explainer-button:focus {
 		padding: 5px;
 		font-size: 16px;
 		line-height: 0;
-		transition: color 0.2s ease;
+		opacity: 1;
+		transition: color 0.2s ease, opacity 0.2s ease;
 	}
 	
 	.tutorial-button:hover {
 		color: #ffe664;
+	}
+	
+	.tutorial-button.hidden {
+		opacity: 0;
 	}
 	
 	body.user-is-tabbing .tutorial-button:focus {
