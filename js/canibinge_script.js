@@ -445,12 +445,21 @@ function populateBingeability(total, average, missingVars) {
 		var dailyEpisodeAverage = dailyAverage / average; // in episodes, rounded to nearest integer
 		if (dailyEpisodeAverage >= 1) {
 			var dailyEpisodeAverageRounded = Math.round(dailyEpisodeAverage);
-			// different wording if timeNumber is 1 && unit is day
+			var dailyEpisodeAverageFloor = Math.floor(dailyEpisodeAverage);
+			var dailyEpisodeAverageCeil = Math.ceil(dailyEpisodeAverage);
 			if (timeNumber == 1 && timeUnitsIndex == 0) {
 				document.querySelector('#bingeability').textContent = "Yes, if you watch all " + dailyEpisodeAverageRounded + " episodes in 1 day.";
 			} else {
-				document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episodes per day.";
+				document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageFloor + "-" + dailyEpisodeAverageCeil + " episodes per day.";
 			}
+			// different wording if timeNumber is 1 && unit is day
+			// OLD
+			// if (timeNumber == 1 && timeUnitsIndex == 0) {
+				// document.querySelector('#bingeability').textContent = "Yes, if you watch all " + dailyEpisodeAverageRounded + " episodes in 1 day.";
+			// } else {
+				// document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episodes per day.";
+			// }
+			// END OLD
 		} else { // if daily average is less than 1 e.g. 0.35 episode
 			// MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
 			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
