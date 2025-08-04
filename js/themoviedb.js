@@ -83,7 +83,8 @@ theMovieDb.common = {
     }
 
 	if (options.method === "GET") {
-      xhr.setRequestHeader("Origin", "https://canibinge.com");
+      // xhr.setRequestHeader("Origin", "https://canibinge.com");
+	xhr.setRequestHeader("Origin", "https://itsbrianyung.github.io/canibinge");
 	}
 
     xhr.timeout = theMovieDb.common.timeout;
