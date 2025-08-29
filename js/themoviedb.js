@@ -84,7 +84,10 @@ theMovieDb.common = {
 
 	if (options.method === "GET") {
       // xhr.setRequestHeader("Origin", "https://canibinge.com");
-	xhr.setRequestHeader("Origin", "https://itsbrianyung.github.io/canibinge");
+	  // xhr.setRequestHeader("Origin", "https://itsbrianyung.github.io/canibinge");
+	  xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Authorization", "Bearer " + api_key);
 	}
 
     xhr.timeout = theMovieDb.common.timeout;
