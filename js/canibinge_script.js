@@ -353,7 +353,7 @@ function loadShow(entry) {
 function show_successCB(data) {
 //	console.log("Success callback: " + data);
 	var queryData = JSON.parse(data);
-	console.log(queryData);
+//	console.log(queryData);
 	// MISSING VARS CONDITION
 	selected_missingVars = false; // reset
 	// EPISODE COUNT
@@ -363,18 +363,57 @@ function show_successCB(data) {
 		var episodesRemainingInCurrentSeason = queryData.seasons[queryData.seasons.length - 1].episode_count - queryData.last_episode_to_air.episode_number; // get episode count of last season in array and minus episode no. of last aired episode
 		trueEpisodeCount = queryData.number_of_episodes - episodesRemainingInCurrentSeason; // get true episode count
 	} else if (queryData.number_of_episodes.length != 0) {
+//		console.log("This error?");
 		trueEpisodeCount = queryData.number_of_episodes;
 		selected_missingVars = true; // SET 'MAYBE' CONDITION
 	} else {
+//		console.log("How about this?");
 		trueEpisodeCount = 0;
 		selected_missingVars = true; // SET 'MAYBE' CONDITION
 	}
 	// RUNTIME
 	var averageRuntime, totalRuntimeMinutes;
-	if (Array.isArray(queryData.episode_run_time) && queryData.episode_run_time.length != 0) { // check if array is empty
+	if (Array.isArray(queryData.episode_run_time) && queryData.episode_run_time.length != 0) { // if episode_run_time is available
 		averageRuntime = average(queryData.episode_run_time);
 		totalRuntimeMinutes = trueEpisodeCount * averageRuntime; // some shows have varied runtimes - use average
+	} else if (queryData.number_of_episodes.length != 0) { // if episode_run_time is not available - start complex calculation
+//		console.log("Show has " + queryData.number_of_seasons + " season(s).");
+		const seasonRuntimes = [];
+		const promises = [];
+        for (i = 0; i < Math.min(queryData.number_of_seasons, 3); i++) { // averaging runtimes of the first 3 seasons
+			promises.push(new Promise(resolve => {
+				// each season calculation is set up as a Promise, so that the bingeability calculation waits for these to finish before commencing
+				theMovieDb.tvSeasons.getById({"season_number": i + 1, "id":queryData.id}, function(data) { // if success
+//                    console.log("Success UR show callback: " + data);
+                    var season_queryData = JSON.parse(data);
+                    var seasonSum = 0;
+                    for (u = 0; u < season_queryData.episodes.length; u++) {
+//                        console.log(season_queryData.episodes[u].runtime);
+                        seasonSum += season_queryData.episodes[u].runtime;
+                    }
+//                    console.log("Season " + season_queryData.season_number + " | Sum of runtime: " + seasonSum + "mins & " + "Avg per ep: " + seasonSum/season_queryData.episodes.length + "mins");
+                    seasonRuntimes.push(seasonSum/season_queryData.episodes.length);
+					resolve();
+                }, function(data) { // if error
+                    console.log("Couldn't calculate average runtime from season data.");
+                    averageRuntime = 0;
+                    totalRuntimeMinutes = 0;
+                    selected_missingVars = true; // SET 'MAYBE' CONDITION
+					resolve();
+          		});
+			}));
+        }
+		Promise.all(promises).then(() => { // this Promise waits for the above per-season calculations to finish before calculating bingeability
+//			console.log("Season runtimes: " + seasonRuntimes + " | Average runtime across seasons: " + average(seasonRuntimes));
+//			console.log("Total no. of eps across ALL seasons: " + queryData.number_of_episodes);
+			averageRuntime = average(seasonRuntimes);
+			totalRuntimeMinutes = trueEpisodeCount * averageRuntime;
+			populateBingeability(totalRuntimeMinutes, averageRuntime, selected_missingVars);
+			selected_totalRuntimeMinutes = totalRuntimeMinutes;
+			selected_averageRuntime = averageRuntime;
+		});
 	} else {
+		console.log("Not enough data available.");
 		averageRuntime = 0;
 		totalRuntimeMinutes = 0;
 		selected_missingVars = true; // SET 'MAYBE' CONDITION
@@ -393,14 +432,15 @@ function show_successCB(data) {
 	var posterURL;
 	if (queryData.poster_path != null) {
         posterURL = 'https://image.tmdb.org/t/p/w500' + queryData.poster_path;
+//		posterURL = 'https://image.tmdb.org/t/p/w220_and_h330_face' + queryData.poster_path;
         document.querySelector('.show-poster').setAttribute('src', posterURL);
         document.querySelector('.show-poster').setAttribute('alt', 'Poster for “'+queryData.name+'”.');
         Vibrant.from(posterURL).getPalette().then(function(palette) {
 			if ($('.dynamic-background').hasClass('enabled')) {
 				$('.dynamic-background').removeClass('enabled'); // reset
 			}
-//            console.log(palette);
-//            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
+            console.log(palette);
+            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
 			setTimeout(function () {
 				$('.dynamic-background').css('background', 'linear-gradient(135deg, rgba('+palette.Vibrant._rgb+',1) 0%, rgba('+palette.Muted._rgb+',1) 100%)');
 				$('.dynamic-background').addClass('enabled');
@@ -450,16 +490,14 @@ function populateBingeability(total, average, missingVars) {
 			if (timeNumber == 1 && timeUnitsIndex == 0) {
 				document.querySelector('#bingeability').textContent = "Yes, if you watch all " + dailyEpisodeAverageRounded + " episodes in 1 day.";
 			} else {
-				document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageFloor + "-" + dailyEpisodeAverageCeil + " episodes per day.";
+//				console.log("dailyEpisodeAverage: " + dailyEpisodeAverage);
+				// If dailyEpisodeAverageFloor = dailyEpisodeAverageCeil, change grammar
+				if (dailyEpisodeAverageFloor == dailyEpisodeAverageCeil) {
+					document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageFloor + " episodes per day.";
+				} else {
+					document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageFloor + "-" + dailyEpisodeAverageCeil + " episodes per day.";
+				}
 			}
-			// different wording if timeNumber is 1 && unit is day
-			// OLD
-			// if (timeNumber == 1 && timeUnitsIndex == 0) {
-				// document.querySelector('#bingeability').textContent = "Yes, if you watch all " + dailyEpisodeAverageRounded + " episodes in 1 day.";
-			// } else {
-				// document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageRounded + " episodes per day.";
-			// }
-			// END OLD
 		} else { // if daily average is less than 1 e.g. 0.35 episode
 			// MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
 			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
