@@ -509,6 +509,12 @@ function populateBingeability(total, average, missingVars) {
 					document.querySelector('#bingeability').textContent = "Yes, if you watch about " + dailyEpisodeAverageFloor + "-" + dailyEpisodeAverageCeil + " episodes per day.";
 				}
 			}
+			if ($('.explainer-button').hasClass('enabled')) {
+				$('.explainer-button').removeClass('enabled'); // remove explainer button
+			}
+			if ($('.explainer-text').hasClass('enabled')) {
+				$('.explainer-text').removeClass('enabled'); // remove explainer text
+			}
 		} else { // if daily average is less than 1 e.g. 0.35 episode
 			// MATH! dailyEpisodeAverage = number of episodes (or 'days' if 1 per day) / daysAvailable
 			var numberOfDays = Math.round(dailyEpisodeAverage * daysAvailable);
@@ -518,13 +524,14 @@ function populateBingeability(total, average, missingVars) {
 			} else {
 				document.querySelector('#bingeability').textContent = "Yes, if you watch 1 episode a day for " + numberOfDays + " days.";
 			}
+			if ($('.explainer-button').hasClass('enabled')) {
+				$('.explainer-button').removeClass('enabled'); // remove explainer button
+			}
+			if ($('.explainer-text').hasClass('enabled')) {
+				$('.explainer-text').removeClass('enabled'); // remove explainer text
+			}
 		}
-		if ($('.explainer-button').hasClass('enabled')) {
-			$('.explainer-button').removeClass('enabled'); // remove explainer button
-		}
-		if ($('.explainer-text').hasClass('enabled')) {
-			$('.explainer-text').removeClass('enabled'); // remove explainer text
-		}
+		
 	}
 }
 
