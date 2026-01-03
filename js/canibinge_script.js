@@ -430,17 +430,21 @@ function show_successCB(data) {
 	}
 	// POSTER
 	var posterURL;
+	const showPoster = document.querySelector('.show-poster');
 	if (queryData.poster_path != null) {
         posterURL = 'https://image.tmdb.org/t/p/w500' + queryData.poster_path;
-//		posterURL = 'https://image.tmdb.org/t/p/w220_and_h330_face' + queryData.poster_path;
-        document.querySelector('.show-poster').setAttribute('src', posterURL);
-        document.querySelector('.show-poster').setAttribute('alt', 'Poster for “'+queryData.name+'”.');
-        Vibrant.from(posterURL).getPalette().then(function(palette) {
+        showPoster.setAttribute('src', posterURL);
+        showPoster.setAttribute('alt', 'Poster for “'+queryData.name+'”.');
+		// Create a "new image" for Vibrant
+		const img = new Image();
+		img.crossOrigin = 'Anonymous'; // this is important as CORS cannot be violated for HTML5 Canvas libraries like Vibrant
+		img.src = posterURL + '?not-from-cache'; // also important
+        Vibrant.from(img).getPalette().then(function(palette) {
 			if ($('.dynamic-background').hasClass('enabled')) {
 				$('.dynamic-background').removeClass('enabled'); // reset
 			}
-            console.log(palette);
-            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
+//            console.log(palette);
+//            console.log(palette.Vibrant._rgb +' '+ palette.Muted._rgb);
 			setTimeout(function () {
 				$('.dynamic-background').css('background', 'linear-gradient(135deg, rgba('+palette.Vibrant._rgb+',1) 0%, rgba('+palette.Muted._rgb+',1) 100%)');
 				$('.dynamic-background').addClass('enabled');
@@ -448,8 +452,8 @@ function show_successCB(data) {
         });
 	} else {
 		posterURL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-		document.querySelector('.show-poster').setAttribute('src', posterURL);
-		document.querySelector('.show-poster').setAttribute('alt', '');
+		showPoster.setAttribute('src', posterURL);
+		showPoster.setAttribute('alt', '');
 	}
 	// WRAP UP
 	populateBingeability(totalRuntimeMinutes, averageRuntime, selected_missingVars);
@@ -462,15 +466,19 @@ function show_errorCB(data) {
 	console.log("Error loading show details.");
 }
 
+function setMaybe() {
+	document.querySelector('#bingeability').textContent = "Maybe? (Just do it.)"; // variables missing, can't complete calculation
+    if (!$('.explainer-button').hasClass('enabled')) {
+        $('.explainer-button').addClass('enabled'); // enable explainer button
+    }
+}
+
 function populateBingeability(total, average, missingVars) {
 	var timeAvailable = timeNumber * timeUnitMins * timeUnitMultipliers[timeUnitsIndex]; // in minutes
 	var daysAvailable = timeNumber * timeUnitMultipliers[timeUnitsIndex]; // in days
 //	console.log("timeAvailable: "+timeAvailable+" daysAvailable: "+daysAvailable);
 	if (missingVars == true) {
-		document.querySelector('#bingeability').textContent = "Maybe? (Just do it.)"; // variables missing, can't complete calculation
-		if (!$('.explainer-button').hasClass('enabled')) {
-			$('.explainer-button').addClass('enabled'); // enable explainer button
-		}
+		setMaybe();
 	} else if (total > timeAvailable) {
 		var atLeastDays = Math.ceil((total / 60) / 24);
 		document.querySelector('#bingeability').textContent = "Nope, you'd need to watch non-stop for at least " + atLeastDays + " days.";
@@ -483,7 +491,10 @@ function populateBingeability(total, average, missingVars) {
 	} else {
 		var dailyAverage = total / daysAvailable; // in minutes
 		var dailyEpisodeAverage = dailyAverage / average; // in episodes, rounded to nearest integer
-		if (dailyEpisodeAverage >= 1) {
+//		console.log("total: "+total+" | daysAvailable: "+daysAvailable+" | dailyAverage: "+dailyAverage+" | average: "+average);
+		if (Number.isNaN(dailyEpisodeAverage)) { // final attempt to catch errors - if dailyEpisodeAverage is undefined
+			setMaybe();
+		} else if (dailyEpisodeAverage >= 1) {
 			var dailyEpisodeAverageRounded = Math.round(dailyEpisodeAverage);
 			var dailyEpisodeAverageFloor = Math.floor(dailyEpisodeAverage);
 			var dailyEpisodeAverageCeil = Math.ceil(dailyEpisodeAverage);
